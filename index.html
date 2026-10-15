@@ -217,7 +217,7 @@ function people(){
   const fdd=s=>{const [y,m,d]=s.split('-').map(Number);const x=new Date(y,m-1,d);return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x.getDay()]+' '+d+' '+MN[m-1]};
   document.getElementById('people').innerHTML=`<div class="card-h"><h3>People</h3><a href="holidays/">Open</a></div>
    ${wd?`<div class="tr ${on?'on':''}"><button class="box" data-coffee="${ts}" aria-pressed="${on}" aria-label="Coffee with Martin">${CHK}</button><span class="zb" style="--zc:#8A6A3A"></span><div class="nm"><b>Coffee with Martin</b><span>Tick it if it happens today.</span></div></div>`:''}
-   ${ev.map(e=>`<div class="tr"><span class="zb" style="--zc:${e.c};margin-left:0"></span><div class="nm"><b>${esc(e.n)}</b><span>${e.date===ts?'<b style="color:var(--ink)">Today</b>':fdd(e.date)}${e.note?' · '+esc(e.note):''}</span></div></div>`).join('')}`;
+   ${ev.map(e=>`<div class="tr"><span class="zb" style="--zc:${e.c};margin-left:0"></span><div class="nm"><b>${esc(e.n)}</b><span>${e.date===ts?'<b style="color:var(--ink)">Today</b>':fdd(e.date)} · ${esc(e.time)}${e.note?' · '+esc(e.note):''}</span></div></div>`).join('')}`;
 }
 people();
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-coffee]');if(!b)return;

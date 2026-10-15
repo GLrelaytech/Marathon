@@ -154,7 +154,7 @@ ul.steps li{margin:5px 0}
   <div class="panel"><h3>Short trips</h3><div class="pc" style="padding-bottom:0"><p class="sub">One a month, on a clean weekend. None in months that already have a long trip.</p></div><div id="short"></div></div>
   <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0"><h3 style="padding:0">People</h3>
       <span><button class="btn ghost" id="smPrev" aria-label="Previous month" style="padding:4px 10px">‹</button> <b id="smLbl" style="display:inline-block;min-width:74px;text-align:center"></b> <button class="btn ghost" id="smNext" aria-label="Next month" style="padding:4px 10px">›</button></span></div>
-    <div class="pc" style="padding-bottom:0"><p class="sub">Defaults: date nights on the 2nd and 4th Saturday, best man and maid of honour on the 1st and 3rd Wednesday, Sammy's godparents on the last Sunday afternoon. Move any of them. Skipped is fine.</p></div>
+    <div class="pc" style="padding-bottom:0"><p class="sub">Defaults, all movable: date nights 2nd and 4th Saturday · best man and maid of honour 1st Wednesday at your place and 3rd Saturday out · Maria and Georgi 2nd Tuesday after nursery · Grandma Vili 1st Sunday · Sammy's godparents last Sunday. Going-out plans assume Sammy stays with Iva's parents; press "Sammy at home" if he can't. Iva's parents every Sunday, not listed. Skipped is fine.</p></div>
     <div id="social"></div>
     <div class="pc" id="openwk" style="border-top:1px solid var(--rule)"></div></div>
   <div class="panel"><h3>Coffee with Martin</h3><div class="pc"><p class="sub">Weekdays. Tick the days it happens. No pressure on the days it doesn't.</p><div class="ck" id="coffee"></div></div></div>
@@ -166,7 +166,7 @@ ul.steps li{margin:5px 0}
     <li><b>Vitosha build</b> (17 May – 13 Jun): only trail weekends that fit the back-to-back runs.</li>
     <li><b>Public holidays are work days</b> (double pay). Keep trips off them where you can.</li>
     <li><b>Plan trip 5 before June.</b></li>
-    <li><b>Buffer:</b> one weekend a month stays open, with no plans. Spontaneous things go there. If something new comes up, move a plan, don't stack it.</li>
+    <li><b>Buffer:</b> one Saturday a month stays open, with no plans (Sunday is family day). Spontaneous things go there. If something new comes up, move a plan, don't stack it.</li>
     <li><b>No social night before a race.</b> Late Thursdays are fine only when Friday is not a long run day.</li></ul>
     <p style="margin-top:10px"><button class="btn ghost" id="ics">Download trips and people plans for your calendar (.ics)</button></p></div></div>
   <div class="foot" id="store">Saving on this device</div>
@@ -264,14 +264,14 @@ function social(){
   const t0=iso(today()); if(!SM)SM=t0.slice(0,7)<'2026-11'?'2026-11':t0.slice(0,7);
   const [y,m]=SM.split('-').map(Number); document.getElementById('smLbl').textContent=MN[m-1]+' '+y;
   const ev=SOC.filter(e=>e.date.slice(0,7)===SM||e.ym===SM);
-  const cnt=t=>ev.filter(e=>e.type===t&&e.status!=='skip').length+' of '+H_SOCIAL_TYPES[t].per;
-  document.getElementById('social').innerHTML=`<div class="pc" style="padding-top:4px"><p class="sub">Date nights ${cnt('date')} · Best man and maid of honour ${cnt('friends')} · Godparents ${cnt('god')}</p></div>`+
+  const cnt=t=>ev.filter(e=>e.type===t&&e.status!=='skip').length+'/'+H_SOCIAL_TYPES[t].per;
+  document.getElementById('social').innerHTML=`<div class="pc" style="padding-top:4px"><p class="sub">${Object.keys(H_SOCIAL_TYPES).map(t=>H_SOCIAL_TYPES[t].short+' '+cnt(t)).join(' · ')}</p></div>`+
    ev.map(e=>`<div class="soc ${e.status}" style="--sc:${e.c}"><span class="bar"></span><div class="ti"><b>${esc(e.n)}</b>
-     <div class="dt">${fd(e.date)}${e.moved?' · moved by you':''}${e.date<t0&&!e.status?' · tick it or skip it':''}</div>${e.note?`<div class="mv">${esc(e.note)}</div>`:''}
+     <div class="dt">${fd(e.date)} · ${esc(e.time)}${e.moved?' · moved by you':''}${e.date<t0&&!e.status?' · tick it or skip it':''}</div>${e.note?`<div class="mv">${esc(e.note)}</div>`:''}
      <input type="date" data-sdate="${e.id}" value="${e.date}" aria-label="Move ${esc(e.n)}"></div>
-     <div class="sb"><button data-sst="done" data-sid="${e.id}" aria-pressed="${e.status==='done'}">Done</button><button data-sst="skip" data-sid="${e.id}" aria-pressed="${e.status==='skip'}">Skip</button></div></div>`).join('');
+     <div class="sb"><button data-sst="done" data-sid="${e.id}" aria-pressed="${e.status==='done'}">Done</button><button data-sst="skip" data-sid="${e.id}" aria-pressed="${e.status==='skip'}">Skip</button>${e.canSwap?`<button data-sammy="${e.id}" aria-pressed="${e.sammyHome}" title="Turn on if Sammy cannot stay with Iva's parents">Sammy at home</button>`:''}</div></div>`).join('');
   const ow=H_openWeekends(state)[SM];
-  document.getElementById('openwk').innerHTML=ow?`<p style="margin:0"><b>Open weekend:</b> ${fd(ow.from)} – ${fd(ow.to)}. Keep it free for whatever comes up.</p>`:`<p class="sub" style="margin:0">No fully open weekend this month. Skip or move one plan if you need air.</p>`;
+  document.getElementById('openwk').innerHTML=ow?`<p style="margin:0"><b>Open Saturday:</b> ${fd(ow.from)}. Keep it free for whatever comes up.</p>`:`<p class="sub" style="margin:0">No open Saturday this month. Skip or move one plan if you need air.</p>`;
 }
 function coffee(){
   const t=today(), mon=new Date(t); mon.setDate(t.getDate()-((t.getDay()+6)%7));
@@ -304,6 +304,7 @@ document.addEventListener('change',e=>{const t=e.target;
 document.addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.trip){ts(d.dataset.trip).open=d.open;localSet()}},true);
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.ck){const s=ts(b.dataset.id);s.ck=s.ck||{};s.ck[b.dataset.ck]=!s.ck[b.dataset.ck];b.setAttribute('aria-pressed',s.ck[b.dataset.ck]);save();return}
+  if(b.dataset.sammy){const o=state.social[b.dataset.sammy]=state.social[b.dataset.sammy]||{};o.sammy=o.sammy==='home'?'':'home';save();render();return}
   if(b.dataset.sid){const o=state.social[b.dataset.sid]=state.social[b.dataset.sid]||{};o.status=o.status===b.dataset.sst?'':b.dataset.sst;save();render();return}
   if(b.dataset.coffee){state.coffee[b.dataset.coffee]=!state.coffee[b.dataset.coffee];if(!state.coffee[b.dataset.coffee])delete state.coffee[b.dataset.coffee];save();coffee();return}
   if(b.id==='smPrev'||b.id==='smNext'){let [y,m]=SM.split('-').map(Number);m+=b.id==='smNext'?1:-1;if(m<1){m=12;y--}if(m>12){m=1;y++}SM=y+'-'+String(m).padStart(2,'0');social();return}

@@ -54,13 +54,14 @@ function H_list(st){
 }
 
 /* ============ social rhythm ============
-   Default rules: date nights on the 2nd and 4th Saturday; best man and maid of honour
-   on the 1st and 3rd Wednesday (the second robotics evening); Sammy's godparents on the
-   last Sunday afternoon. Defaults are rules, not promises: move any of them. */
+   Defaults are rules, not promises: move any of them on the Holidays page.
+   Sundays: the visit to Iva's parents happens every week and is not listed. */
 const H_SOCIAL_TYPES={
-  date:{n:'Date night',who:'with your wife',per:2,c:'#B5486A'},
-  friends:{n:'Evening with the best man and maid of honour',who:'',per:2,c:'#7A5BA6'},
-  god:{n:'Evening with Sammy\'s godparents',who:'',per:1,c:'#2F8A8A'}
+  date:{n:'Date night',short:'Date nights',per:2,c:'#B5486A'},
+  friends:{n:'Best man and maid of honour',short:'Best man and maid of honour',per:2,c:'#7A5BA6'},
+  god:{n:'Sammy\'s godparents',short:'Godparents',per:1,c:'#2F8A8A'},
+  gp:{n:'Grandparents Maria and Georgi',short:'Maria and Georgi',per:1,c:'#B07A2A'},
+  vili:{n:'Grandma Vili',short:'Grandma Vili',per:1,c:'#5F8A3A'}
 };
 function H_social(st){
   st=st||H_load(); const ov=(st.social)||{};
@@ -72,26 +73,44 @@ function H_social(st){
   const bad=s=>{const d=new Date(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));d.setDate(d.getDate()+1);return races.includes(s)||races.includes(iso(d))};
   const out=[];
   for(let i=0;i<12;i++){const y=2026+Math.floor((10+i)/12),m=(10+i)%12,ym=y+'-'+String(m+1).padStart(2,'0');
-    const plan=[['date',nth(y,m,6,2),1],['date',nth(y,m,6,4),2],['friends',nth(y,m,3,1),1],['friends',nth(y,m,3,3),2],['god',last(y,m,0),1]];
-    plan.forEach(([type,d,k])=>{if(!d)return;let s=iso(d),note='';
+    /* Going-out plans have two versions: Sammy with Iva's parents, or Sammy at home. */
+    const OUT_D={out:'Evening out. Sammy stays with Iva\'s parents.',home:'Date night in, after Sammy is asleep.'};
+    const OUT_F={out:'Saturday out. Sammy stays with Iva\'s parents.',home:'At your place instead. Sammy is home.'};
+    /* Month with a weekend away (starts on a Saturday): friends move to the Friday night before it. */
+    const wk=trips.find(t=>t.n==='Weekend away'&&t.from.slice(0,7)===ym&&new Date(t.from+'T12:00').getDay()===6);
+    let wkFri=null;if(wk){wkFri=new Date(wk.from+'T12:00');wkFri.setDate(wkFri.getDate()-1)}
+    const plan=[
+      ['date',nth(y,m,6,2),1,OUT_D],
+      ['date',nth(y,m,6,4),2,OUT_D],
+      ['friends',nth(y,m,3,1),1,'Wednesday evening at your place. Sammy is home.'],
+      wk?['friends',wkFri,2,{out:'Friday night out before '+wk.n.toLowerCase()+'. Sammy stays with Iva\'s parents.',home:'Friday evening at your place. Sammy is home.'}]
+        :['friends',nth(y,m,6,3),2,OUT_F],
+      ['god',last(y,m,0),1,'Sunday afternoon to evening: they play with Sammy, then dinner together.'],
+      ['gp',nth(y,m,2,2),1,'17:30–18:30, straight after nursery.'],
+      ['vili',nth(y,m,0,1),1,'Sunday, with the visit to Iva\'s parents (close by).']];
+    plan.forEach(([type,d,k,tx])=>{if(!d)return;let s=iso(d),note='';
       const shift=step=>{for(let j=0;j<3;j++){const x=new Date(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));x.setDate(x.getDate()+step);const xs=iso(x);if(x.getMonth()!==m)return false;s=xs;if(!trip(s)&&!bad(s))return true}return false};
       if(bad(s)){if(!shift(-7))shift(7);note='Moved: race weekend.'}
       const tr=trip(s);
       if(tr){if(type==='date'){note='On '+tr.n+': make one evening of the trip the date.'}else{if(!shift(7))shift(-7);note=trip(s)?'Clashes with a trip: move it.':'Moved: you are away.'}}
-      if(out.some(e=>e.type===type&&e.auto===s)){if(!shift(7))shift(-7);note='Moved: two on one day.'}
+      const taken=x=>out.some(e=>e.auto===x);
+      if(taken(s)){const keep=s;let ok=false;for(const st of [7,-7,14,-14]){s=keep;ok=shift(st)&&!taken(s);if(ok)break}
+        if(!ok)s=keep;else note='Moved: another plan that day.'}
       const id=`${type}-${ym}-${k}`, o=ov[id]||{};
-      out.push({id,type,ym,date:o.date||s,auto:s,moved:!!o.date&&o.date!==s,status:o.status||'',note:o.date?'':note,...H_SOCIAL_TYPES[type]});
+      const canSwap=typeof tx==='object', sammyHome=canSwap&&o.sammy==='home', time=canSwap?(sammyHome?tx.home:tx.out):tx;
+      out.push({id,type,ym,time,canSwap,sammyHome,date:o.date||s,auto:s,moved:!!o.date&&o.date!==s,status:o.status||'',note:o.date?'':note,...H_SOCIAL_TYPES[type]});
     });
   }
   return out.sort((a,b)=>a.date.localeCompare(b.date));
 }
-/* First fully free weekend of each month: no trip, no social plan, no race. Keep it open. */
+/* First open Saturday of each month (Friday evening and Saturday free): no trip, no plan, no race.
+   Sunday is the family day, so it does not count. */
 function H_openWeekends(st){
   const ev=H_social(st), trips=H_list(st), out={};
   const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   for(let i=0;i<12;i++){const y=2026+Math.floor((10+i)/12),m=(10+i)%12;const d=new Date(y,m,1);while(d.getDay()!==6)d.setDate(d.getDate()+1);
     for(;d.getMonth()===m;d.setDate(d.getDate()+7)){const sa=iso(d),su=new Date(d);su.setDate(su.getDate()+1);const sus=iso(su);const fr=new Date(d);fr.setDate(fr.getDate()-1);const frs=iso(fr);
-      const busy=[frs,sa,sus].some(s=>ev.some(e=>e.date===s&&e.status!=='skip')||trips.some(t=>s>=t.from&&s<=t.to)||H_RACES.some(r=>r.d===s));
+      const busy=[frs,sa].some(s=>ev.some(e=>e.date===s&&e.status!=='skip')||trips.some(t=>s>=t.from&&s<=t.to)||H_RACES.some(r=>r.d===s));
       if(!busy){out[y+'-'+String(m+1).padStart(2,'0')]={from:sa,to:sus};break}}}
   return out;
 }
