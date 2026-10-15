@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meals — Life hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEAE4; --card:#FBFAF7; --card2:#F2F0EA; --ink:#1B1E1A; --soft:#5F665D; --faint:#8C9289; --rule:#D6D3CA;
+  --acc:#3F6B3A; --acc2:#B5782B; --big:#A8432F; --rest:#6F8FA8; --done:#E4EDE1; --shadow:0 1px 2px rgba(27,30,26,.06),0 4px 14px rgba(27,30,26,.05);
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141613; --card:#1C1F1B; --card2:#232722; --ink:#E8EBE5; --soft:#A7AEA3; --faint:#7F867C; --rule:#323730;
+  --acc:#7DB273; --acc2:#DDA35A; --big:#E07A63; --rest:#8FB0C9; --done:#1F2B1D; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141613; --card:#1C1F1B; --card2:#232722; --ink:#E8EBE5; --soft:#A7AEA3; --faint:#7F867C; --rule:#323730;
+  --acc:#7DB273; --acc2:#DDA35A; --big:#E07A63; --rest:#8FB0C9; --done:#1F2B1D; --shadow:none; color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.hidden{display:none!important}
+.mods{display:flex;gap:6px;padding-top:16px;flex-wrap:wrap}
+.mods span{font-size:12.5px;padding:3px 10px;border-radius:12px;border:1px solid var(--rule);color:var(--faint)}
+.mods span.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.hero{padding:22px 0 16px}
+.hero .k{font-size:13px;color:var(--soft)}
+.hero h1{margin:2px 0 0;font:700 clamp(40px,11vw,64px)/.9 'Barlow Condensed',sans-serif;letter-spacing:-.01em}
+.dtype{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:3px;background:var(--card);border-left:3px solid var(--dc)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--rule);display:flex;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:0;border-bottom:2px solid transparent;font:600 18px 'Barlow Condensed',sans-serif;color:var(--soft);padding:12px 12px 9px;cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:3px;margin-top:14px;box-shadow:var(--shadow);overflow:hidden}
+.panel h3{margin:0;padding:14px 16px 0;font:700 23px/1.1 'Barlow Condensed',sans-serif}
+.panel .pc{padding:8px 16px 14px}
+.panel p{margin:6px 0}
+.sub{font-size:13px;color:var(--soft)}
+.meal{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--rule)}
+.meal:first-of-type{border-top:0}
+.slot{flex:0 0 74px;font:600 15px 'Barlow Condensed',sans-serif;color:var(--soft);padding-top:1px}
+.mb b{display:block;font-size:15.5px}
+.mb .d{font-size:13.5px;color:var(--soft)}
+.mb .cook{font-size:12.5px;color:var(--acc2);font-weight:600;margin-top:3px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-weight:600;color:var(--soft);font-size:12px;padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:8px 8px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td:first-child{font-weight:600;white-space:nowrap}
+tr.today td{background:var(--card2)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dc);margin-right:6px;vertical-align:1px}
+.sec{padding:10px 16px 2px;font:600 15px 'Barlow Condensed',sans-serif;color:var(--soft);border-top:1px solid var(--rule);display:flex;justify-content:space-between}
+.sec:first-child{border-top:0}
+.it{display:flex;align-items:center;gap:11px;padding:8px 16px}
+.box{flex-shrink:0;width:24px;height:24px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);cursor:pointer;display:grid;place-items:center;padding:0}
+.box svg{width:14px;height:14px;opacity:0}
+.it.on .box{background:var(--acc);border-color:var(--acc)}
+.it.on .box svg{opacity:1}
+.it .nm{flex:1;min-width:0}
+.it .nm b{font-weight:600;font-size:14.5px}
+.it .nm span{display:block;font-size:12.5px;color:var(--soft)}
+.it.on .nm b{text-decoration:line-through;color:var(--soft)}
+.eb{flex-shrink:0;font-size:12.5px;font-weight:600;color:var(--acc);text-decoration:none;border:1px solid var(--rule);border-radius:3px;padding:4px 9px;white-space:nowrap}
+.need{flex-shrink:0;font-size:12px;border:1px solid var(--rule);background:var(--card);border-radius:12px;padding:3px 10px;cursor:pointer;color:var(--soft)}
+.need[aria-pressed="true"]{background:var(--acc2);border-color:var(--acc2);color:#fff}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px;border-top:1px solid var(--rule)}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px;text-decoration:none;display:inline-block}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule)}
+.count{font-size:13px;color:var(--soft);margin-left:auto}
+ul.steps{margin:6px 0;padding-left:18px}
+ul.steps li{margin:5px 0}
+.note{border-left:3px solid var(--acc2);padding:8px 12px;background:var(--card2);margin:10px 0;font-size:14px}
+.foot{margin-top:24px;font-size:12.5px;color:var(--faint)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:7px 14px;border-radius:3px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+.hubnav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:10px 16px 0;max-width:820px;margin:0 auto;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.hubnav::-webkit-scrollbar{display:none}
+.hubnav a{flex-shrink:0;font-size:13px;font-weight:600;text-decoration:none;color:var(--soft);padding:5px 11px;border-radius:14px;border:1px solid var(--rule)}
+.hubnav a[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style>
+</head>
+<body>
+<nav class="hubnav" aria-label="Life hub"><a href="../">Life hub</a><a href="../training/">Training</a><a href="../meals/" aria-current="page">Meals</a><a href="../holidays/">Holidays</a><a href="../car/">Car</a><a href="../money/">Money</a></nav>
+<div class="wrap">
+    <header class="hero">
+    <div class="k" id="hk"></div>
+    <h1 id="hh">Today</h1>
+    <div class="dtype" id="ht"></div>
+  </header>
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="today">Today</button>
+    <button role="tab" aria-selected="false" data-tab="week">Week</button>
+    <button role="tab" aria-selected="false" data-tab="shop">Shopping</button>
+    <button role="tab" aria-selected="false" data-tab="prep">Prep</button>
+    <button role="tab" aria-selected="false" data-tab="rules">Rules</button>
+  </nav>
+  <section id="tab-today"></section>
+  <section id="tab-week" class="hidden"></section>
+  <section id="tab-shop" class="hidden"></section>
+  <section id="tab-prep" class="hidden"></section>
+  <section id="tab-rules" class="hidden"></section>
+  <div class="foot" id="store">Saving on this device</div>
+</div>
+<div class="toast" id="toast">Saved</div>
+
+<script src="meals-data.js"></script>
+<script src="../shared/sync.js"></script>
+<script>
+/* ============ state + storage ============ */
+const LKEY='lifehub-meals';
+let state={cart:{},need:{},week:''};
+let db=null,uid=null,saveT=null;
+function localGet(){try{return JSON.parse(localStorage.getItem(LKEY)||'null')}catch(e){return null}}
+function localSet(){try{localStorage.setItem(LKEY,JSON.stringify(state))}catch(e){}}
+function merge(s){if(s)state=Object.assign({cart:{},need:{},week:''},s)}
+function save(){localSet();if(window.HubSync)HubSync.push(LKEY,state);clearTimeout(saveT);saveT=setTimeout(async()=>{
+  if(db&&uid){try{await db.doc(`data/users/${uid}/meals`).set({s:JSON.stringify(state),at:Date.now()})}catch(e){}}},600)}
+async function connect(){try{
+  if(!window.claude||!claude.use)return;
+  const u=await claude.use('user');db=await claude.use('db');if(!db||!u){db=null;return}
+  uid=await u.id();if(!uid){db=null;return}
+  const snap=await db.doc(`data/users/${uid}/meals`).get();
+  if(snap.exists){try{merge(JSON.parse(snap.data().s));localSet()}catch(e){}}else if(localGet())save();
+  document.getElementById('store').textContent='Saving to your Claude account';render();
+}catch(e){db=null}}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1300)}
+
+/* ============ helpers ============ */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dIdx=()=>(new Date().getDay()+6)%7;
+const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4"><path d="M3 8.5l3 3 7-7"/></svg>';
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ============ render ============ */
+function hero(){
+  const t=new Date(),d=dIdx();
+  document.getElementById('hk').textContent=M_FULL[d]+', '+t.getDate()+' '+MN[t.getMonth()];
+  const ht=document.getElementById('ht');ht.textContent=M_TYPE[d][0];ht.style.setProperty('--dc',M_TYPE[d][1]);
+}
+function mealRows(w){
+  return [['Breakfast',w.b],['Snack',w.s1],['Lunch',w.l],['Snack',w.s2]].map(([s,m])=>`
+    <div class="meal"><div class="slot">${s}</div><div class="mb"><b>${esc(m.n)}</b><div class="d">${esc(m.d)}</div>${m.cook?`<div class="cook">${esc(m.cook)}</div>`:''}</div></div>`).join('');
+}
+function renderToday(){
+  const d=dIdx(),tm=(d+1)%7;
+  let extra='';
+  if(d===5)extra=`<div class="note"><b>Saturday: order from eBag</b> for Sunday delivery. The list is in the Shopping tab.</div>`;
+  if(d===6)extra=`<div class="note"><b>Sunday is prep day.</b> 30 min, see the Prep tab.</div>`;
+  document.getElementById('tab-today').innerHTML=`${extra}
+    <div class="panel">${mealRows(MW[d])}</div>
+    <div class="panel"><h3>Tonight, for tomorrow</h3><div class="pc">
+      <p>${MW[tm].b.n.startsWith('Skyr')?'Put 100 g berries in the fridge to thaw.':'Nothing to thaw. Eggs for breakfast tomorrow.'}</p>
+      <p class="sub">Tomorrow's lunch: <b style="color:var(--ink)">${esc(MW[tm].l.n)}</b></p></div></div>`;
+}
+function renderWeek(){
+  const d=dIdx();
+  document.getElementById('tab-week').innerHTML=`<div class="panel"><h3>The fixed week</h3><div class="pc">
+    <p class="sub">Same every week. Dinner is with the family and is not in the plan.</p></div>
+    <div class="tw" style="padding:0 16px 12px"><table>
+    <tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Snacks</th></tr>
+    ${MW.map((w,i)=>`<tr class="${i===d?'today':''}"><td><span class="dot" style="--dc:${M_TYPE[i][1]}"></span>${M_DN[i]}</td><td>${esc(w.b.n)}</td><td>${esc(w.l.n)}</td><td>${esc(w.s1.n)}; ${esc(w.s2.n)}</td></tr>`).join('')}
+    </table></div></div>
+    <div class="panel"><h3>Bored? One swap at a time</h3><div class="pc"><ul class="steps">
+      <li><b>Chicken</b> ↔ turkey fillet (пуешко филе). Same grill time.</li>
+      <li><b>Salmon</b> ↔ mackerel or trout.</li>
+      <li><b>Steak</b> ↔ pork neck steak, or lamb chops.</li>
+      <li><b>Granola</b> ↔ muesli with no added sugar.</li>
+      <li><b>Couscous</b> ↔ bulgur.</li></ul>
+      <p class="sub">Change one item for a full week, not day by day. That keeps the shopping the same.</p></div></div>`;
+}
+function itemRow(id,bg,en,qty,mode){
+  const on=mode==='cart'?!!state.cart[id]:!!state.cart['s-'+id];
+  const need=!!state.need[id];
+  return `<div class="it ${on?'on':''}">
+    <button class="box" data-cart="${mode==='cart'?id:'s-'+id}" aria-pressed="${on}" aria-label="In cart: ${esc(en)}">${CHECK}</button>
+    <div class="nm"><b>${esc(en)}</b><span>${esc(bg)}${qty?' · '+esc(qty):''}</span></div>
+    ${mode==='staple'?`<button class="need" data-need="${id}" aria-pressed="${need}">${need?'Need':'Have'}</button>`:''}
+    <a class="eb" href="${EB(bg)}" target="_blank" rel="noopener">eBag</a></div>`;
+}
+function renderShop(){
+  const wk=WEEKLY.flatMap(s=>s[1]); const inCart=wk.filter(x=>state.cart[x[0]]).length;
+  const needed=STAPLES.flatMap(s=>s[1]).filter(x=>state.need[x[0]]);
+  document.getElementById('tab-shop').innerHTML=`
+    <div class="panel"><h3>Every week</h3><div class="pc"><p class="sub">Order on Saturday for Sunday delivery. Tap eBag, add to cart, tick it here.</p></div>
+      ${WEEKLY.map(([sec,items])=>`<div class="sec">${sec}</div>`+items.map(x=>itemRow(x[0],x[1],x[2],x[3],'cart')).join('')).join('')}
+      <div class="bar"><button class="btn ghost" id="newWeek">New week: clear ticks</button><span class="count">${inCart} of ${wk.length} in cart</span></div></div>
+    <div class="panel"><h3>Staples</h3><div class="pc"><p class="sub">These last 2–4 weeks. When one runs low, set it to <b>Need</b>. It then shows in the list below until you buy it.</p></div>
+      ${STAPLES.map(([sec,items])=>`<div class="sec">${sec}</div>`+items.map(x=>itemRow(x[0],x[1],x[2],x[3],'staple')).join('')).join('')}</div>
+    <div class="panel"><h3>Staples to buy this week</h3>
+      ${needed.length?needed.map(x=>itemRow(x[0],x[1],x[2],x[3],'staple')).join(''):'<div class="pc"><p class="sub">Nothing. All staples are stocked.</p></div>'}</div>`;
+}
+function renderPrep(){
+  document.getElementById('tab-prep').innerHTML=`
+  <div class="panel"><h3>Saturday: order (5 min)</h3><div class="pc"><ul class="steps">
+    <li>Open the Shopping tab. Tap through the weekly list on eBag.</li>
+    <li>Add any staple set to <b>Need</b>.</li>
+    <li>Choose a Sunday morning delivery slot.</li></ul></div></div>
+  <div class="panel"><h3>Sunday: prep (30 min)</h3><div class="pc"><ul class="steps">
+    <li><b>Rice:</b> cook 175 g (dry weight). That is Sunday and Monday.</li>
+    <li><b>Potatoes:</b> boil 300 g baby potatoes for Wednesday. Keep them in the fridge.</li>
+    <li><b>Garlic yoghurt:</b> 400 g Greek yoghurt, 1 garlic clove (grated), dill, salt, lemon. Lasts until Thursday.</li>
+    <li><b>Bread:</b> freeze half the rye loaf.</li>
+    <li><b>Lunch:</b> pork on the Optigrill.</li></ul></div></div>
+  <div class="panel"><h3>Cooking days</h3><div class="pc"><ul class="steps">
+    <li><b>Monday:</b> grill 2 chicken portions (Mon + Tue).</li>
+    <li><b>Wednesday:</b> steak, 5 min.</li>
+    <li><b>Thursday:</b> salmon and couscous, 10 min.</li>
+    <li><b>Friday:</b> pasta and 2 chicken portions (Fri + Sat).</li>
+    <li><b>Every night:</b> 100 g berries from the freezer to the fridge.</li></ul></div></div>`;
+}
+function renderRules(){
+  document.getElementById('tab-rules').innerHTML=`
+  <div class="panel"><h3>Never in the plan</h3><div class="pc">
+    <p>Tomatoes, peppers, onions, paprika, chili.</p>
+    <div class="note"><b>Check labels on:</b> pesto, ready sauces, burgers, kyufteta, kebapcheta, sausages, guacamole and spice mixes. They often hide onion, paprika or chili.</div></div></div>
+  <div class="panel"><h3>Portions follow training</h3><div class="pc"><ul class="steps">
+    <li><b>Monday and Friday</b> (quality and long run): more carbs at breakfast and lunch.</li>
+    <li><b>Saturday</b> (rest): eggs for breakfast, normal lunch.</li>
+    <li><b>Protein:</b> about 200 g meat or fish at lunch, plus skyr or eggs at breakfast.</li>
+    <li><b>Long runs over 90 min:</b> eat during the run, every 30–40 min. That is separate from this plan.</li></ul>
+    <p class="sub">Weight comes down from the rhythm: same meals, fixed portions, no grazing. Do not cut carbs on hard days.</p></div></div>
+  <div class="panel"><h3>Plan B: when life happens</h3><div class="pc"><ul class="steps">
+    <li><b>Missed the eBag order:</b> eggs on rye, pesto pasta with tuna, wraps with kashkaval and sweetcorn. All from staples. Order on Monday instead.</li>
+    <li><b>No time to grill:</b> skyr bowl for lunch, plus a banana and nuts. Grill the protein the next day.</li>
+    <li><b>Eating out or a social evening:</b> pick a grilled meat or fish with rice or potatoes. Ask for no onion and no peppers. No guilt, back to the plan at the next meal.</li>
+    <li><b>Away on a trip:</b> keep skyr or yoghurt breakfasts if you can. The rest is free.</li>
+    <li><b>Never:</b> skip a meal to "make up" for a big one. That breaks the rhythm.</li></ul></div></div>`;
+}
+function render(){hero();renderToday();renderWeek();renderShop();renderPrep();renderRules()}
+
+/* ============ events ============ */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.tab){document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));
+    ['today','week','shop','prep','rules'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('hidden',t!==b.dataset.tab));return}
+  if(b.dataset.cart){const k=b.dataset.cart;state.cart[k]=!state.cart[k];if(!state.cart[k])delete state.cart[k];
+    if(k.startsWith('s-')&&state.cart[k]){delete state.need[k.slice(2)]}
+    renderShop();save();return}
+  if(b.dataset.need){const k=b.dataset.need;state.need[k]=!state.need[k];if(!state.need[k])delete state.need[k];delete state.cart['s-'+k];renderShop();save();return}
+  if(b.id==='newWeek'){if(!confirm('Clear all ticks for a new week?'))return;state.cart={};renderShop();save();toast('New week');return}
+});
+
+merge(localGet());render();connect();
+if(window.HubSync){HubSync.onStatus(t=>{document.getElementById('store').textContent=t==='Synced'?'Synced across devices':t});
+  HubSync.sync(LKEY,state,d=>{merge(d);localSet();render()});}
+</script>
+</body>
+</html>

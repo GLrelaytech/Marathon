@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holidays — Life hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEAE4; --card:#FBFAF7; --card2:#F2F0EA; --ink:#1B1E1A; --soft:#5F665D; --faint:#8C9289; --rule:#D6D3CA;
+  --acc:#3F6B3A; --acc2:#B5782B; --big:#A8432F; --rest:#6F8FA8; --done:#E4EDE1; --shadow:0 1px 2px rgba(27,30,26,.06),0 4px 14px rgba(27,30,26,.05);
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141613; --card:#1C1F1B; --card2:#232722; --ink:#E8EBE5; --soft:#A7AEA3; --faint:#7F867C; --rule:#323730;
+  --acc:#7DB273; --acc2:#DDA35A; --big:#E07A63; --rest:#8FB0C9; --done:#1F2B1D; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141613; --card:#1C1F1B; --card2:#232722; --ink:#E8EBE5; --soft:#A7AEA3; --faint:#7F867C; --rule:#323730;
+  --acc:#7DB273; --acc2:#DDA35A; --big:#E07A63; --rest:#8FB0C9; --done:#1F2B1D; --shadow:none; color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.hidden{display:none!important}
+.mods{display:flex;gap:6px;padding-top:16px;flex-wrap:wrap}
+.mods span{font-size:12.5px;padding:3px 10px;border-radius:12px;border:1px solid var(--rule);color:var(--faint)}
+.mods span.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.hero{padding:22px 0 16px}
+.hero .k{font-size:13px;color:var(--soft)}
+.hero h1{margin:2px 0 0;font:700 clamp(40px,11vw,64px)/.9 'Barlow Condensed',sans-serif;letter-spacing:-.01em}
+.dtype{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:3px;background:var(--card);border-left:3px solid var(--dc)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--rule);display:flex;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:0;border-bottom:2px solid transparent;font:600 18px 'Barlow Condensed',sans-serif;color:var(--soft);padding:12px 12px 9px;cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:3px;margin-top:14px;box-shadow:var(--shadow);overflow:hidden}
+.panel h3{margin:0;padding:14px 16px 0;font:700 23px/1.1 'Barlow Condensed',sans-serif}
+.panel .pc{padding:8px 16px 14px}
+.panel p{margin:6px 0}
+.sub{font-size:13px;color:var(--soft)}
+.meal{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--rule)}
+.meal:first-of-type{border-top:0}
+.slot{flex:0 0 74px;font:600 15px 'Barlow Condensed',sans-serif;color:var(--soft);padding-top:1px}
+.mb b{display:block;font-size:15.5px}
+.mb .d{font-size:13.5px;color:var(--soft)}
+.mb .cook{font-size:12.5px;color:var(--acc2);font-weight:600;margin-top:3px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-weight:600;color:var(--soft);font-size:12px;padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:8px 8px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td:first-child{font-weight:600;white-space:nowrap}
+tr.today td{background:var(--card2)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dc);margin-right:6px;vertical-align:1px}
+.sec{padding:10px 16px 2px;font:600 15px 'Barlow Condensed',sans-serif;color:var(--soft);border-top:1px solid var(--rule);display:flex;justify-content:space-between}
+.sec:first-child{border-top:0}
+.it{display:flex;align-items:center;gap:11px;padding:8px 16px}
+.box{flex-shrink:0;width:24px;height:24px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);cursor:pointer;display:grid;place-items:center;padding:0}
+.box svg{width:14px;height:14px;opacity:0}
+.it.on .box{background:var(--acc);border-color:var(--acc)}
+.it.on .box svg{opacity:1}
+.it .nm{flex:1;min-width:0}
+.it .nm b{font-weight:600;font-size:14.5px}
+.it .nm span{display:block;font-size:12.5px;color:var(--soft)}
+.it.on .nm b{text-decoration:line-through;color:var(--soft)}
+.eb{flex-shrink:0;font-size:12.5px;font-weight:600;color:var(--acc);text-decoration:none;border:1px solid var(--rule);border-radius:3px;padding:4px 9px;white-space:nowrap}
+.need{flex-shrink:0;font-size:12px;border:1px solid var(--rule);background:var(--card);border-radius:12px;padding:3px 10px;cursor:pointer;color:var(--soft)}
+.need[aria-pressed="true"]{background:var(--acc2);border-color:var(--acc2);color:#fff}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px;border-top:1px solid var(--rule)}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px;text-decoration:none;display:inline-block}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule)}
+.count{font-size:13px;color:var(--soft);margin-left:auto}
+ul.steps{margin:6px 0;padding-left:18px}
+ul.steps li{margin:5px 0}
+.note{border-left:3px solid var(--acc2);padding:8px 12px;background:var(--card2);margin:10px 0;font-size:14px}
+.foot{margin-top:24px;font-size:12.5px;color:var(--faint)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:7px 14px;border-radius:3px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style><style>
+.hubnav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:10px 16px 0;max-width:820px;margin:0 auto;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.hubnav::-webkit-scrollbar{display:none}
+.hubnav a{flex-shrink:0;font-size:13px;font-weight:600;text-decoration:none;color:var(--soft);padding:5px 11px;border-radius:14px;border:1px solid var(--rule)}
+.hubnav a[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style><style>
+.cal{padding:6px 16px 14px}
+.mrow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center;margin:5px 0}
+.mrow .ml{font:600 14px 'Barlow Condensed',sans-serif;color:var(--soft)}
+.days{display:grid;grid-template-columns:repeat(31,1fr);gap:1px}
+.days i{height:16px;border-radius:1px;background:var(--card2);position:relative}
+.days i.we{background:var(--rule)}
+.days i.bo{background:repeating-linear-gradient(135deg,var(--card2) 0 3px,color-mix(in srgb,var(--big) 35%,transparent) 3px 5px)}
+.days i.tl{background:var(--acc)}
+.days i.ts{background:var(--acc2)}
+.days i.rc{background:var(--ink)}
+.days i.ph::after{content:"";position:absolute;left:50%;top:-3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--big)}
+.days i.td{outline:2px solid var(--ink);outline-offset:0;z-index:1}
+.days i.nx{visibility:hidden}
+.leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--soft);padding:0 16px 12px}
+.leg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.trip{border-top:1px solid var(--rule)}
+.trip summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;gap:12px;align-items:flex-start}
+.trip summary::-webkit-details-marker{display:none}
+.trip .bar{width:4px;align-self:stretch;border-radius:2px;background:var(--tc);flex-shrink:0}
+.trip .ti{flex:1;min-width:0}
+.trip .ti b{font-size:15.5px}
+.trip .ti .dt{font-size:13px;color:var(--soft)}
+.trip .st{flex-shrink:0;font-size:12px;font-weight:600;padding:2px 9px;border-radius:12px;background:var(--card2);color:var(--soft)}
+.trip .st.booked{background:var(--acc);color:#fff}
+.trip .st.done{background:var(--rule);color:var(--soft)}
+.flag{font-size:12.5px;color:var(--big);font-weight:600;margin-top:3px}
+.mv{font-size:12.5px;color:var(--acc2);font-weight:600;margin-top:3px}
+.tb{padding:0 16px 14px 32px}
+.tb p{margin:6px 0;font-size:14px}
+.fld{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.fld label{font-size:12px;color:var(--soft);display:block}
+.fld input,.fld select,.fld textarea{width:100%;font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
+.fld .full{grid-column:1/-1}
+.ck{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ck button{font-size:12.5px;border:1px solid var(--rule);background:var(--card);border-radius:14px;padding:4px 10px;cursor:pointer;color:var(--soft)}
+.ck button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.soc{display:flex;gap:11px;align-items:flex-start;padding:10px 16px;border-top:1px solid var(--rule)}
+.soc .bar{width:4px;align-self:stretch;border-radius:2px;background:var(--sc);flex-shrink:0}
+.soc .ti{flex:1;min-width:0}.soc .ti b{font-size:14.5px}.soc .ti .dt{font-size:12.5px;color:var(--soft)}
+.soc input[type=date]{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);margin-top:5px}
+.soc.done .ti b{text-decoration:line-through;color:var(--soft)}.soc.skip{opacity:.5}
+.sb{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.sb button{font-size:12px;border:1px solid var(--rule);background:var(--card);border-radius:12px;padding:3px 9px;cursor:pointer;color:var(--soft)}
+.sb button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.days i.so{box-shadow:inset 0 -4px 0 #B5486A}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:6px 16px 14px}
+.stats div{background:var(--card2);border-radius:3px;padding:8px 10px}
+.stats b{display:block;font:700 26px/1 'Barlow Condensed',sans-serif}
+.stats span{font-size:12px;color:var(--soft)}
+</style>
+</head>
+<body>
+<nav class="hubnav" aria-label="Life hub"><a href="../">Life hub</a><a href="../training/">Training</a><a href="../meals/">Meals</a><a href="./" aria-current="page">Holidays</a><a href="../car/">Car</a><a href="../money/">Money</a></nav>
+<div class="wrap">
+  <header class="hero"><div class="k" id="hk">Holidays</div><h1 id="hh">Holidays</h1><div class="sub" id="hs" style="margin-top:8px"></div></header>
+  <div class="panel"><h3>The year</h3><div class="pc" style="padding-bottom:0"><p class="sub">Each row is a month. Each block is a day. Change a trip's dates below and the training plan adapts.</p></div>
+    <div class="cal" id="cal"></div>
+    <div class="leg"><span><b style="background:var(--acc)"></b>Long trip</span><span><b style="background:var(--acc2)"></b>Short trip</span><span><b style="background:var(--ink)"></b>Race</span><span><b style="background:repeating-linear-gradient(135deg,var(--card2) 0 3px,color-mix(in srgb,var(--big) 35%,transparent) 3px 5px)"></b>Limited</span><span><b style="background:var(--rule)"></b>Weekend</span><span>● Public holiday (double pay)</span><span><b style="background:#B5486A;height:4px;vertical-align:2px"></b>People</span></div></div>
+  <div class="panel"><h3>Leave days</h3><div class="stats" id="stats"></div>
+    <div class="pc" style="padding-top:0"><div class="fld" style="grid-template-columns:1fr"><div><label for="allow">Your yearly leave allowance (days)</label><input id="allow" inputmode="numeric" style="max-width:120px"></div></div>
+    <p class="sub">Counts every Mon–Fri inside a trip, public holidays included, because you work them for double pay. Change the allowance to match your contract.</p></div></div>
+  <div class="panel"><h3>Long trips</h3><div id="long"></div></div>
+  <div class="panel"><h3>Short trips</h3><div class="pc" style="padding-bottom:0"><p class="sub">One a month, on a clean weekend. None in months that already have a long trip.</p></div><div id="short"></div></div>
+  <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0"><h3 style="padding:0">People</h3>
+      <span><button class="btn ghost" id="smPrev" aria-label="Previous month" style="padding:4px 10px">‹</button> <b id="smLbl" style="display:inline-block;min-width:74px;text-align:center"></b> <button class="btn ghost" id="smNext" aria-label="Next month" style="padding:4px 10px">›</button></span></div>
+    <div class="pc" style="padding-bottom:0"><p class="sub">Defaults: date nights on the 2nd and 4th Saturday, best man and maid of honour on the 1st and 3rd Wednesday, Sammy's godparents on the last Sunday afternoon. Move any of them. Skipped is fine.</p></div>
+    <div id="social"></div>
+    <div class="pc" id="openwk" style="border-top:1px solid var(--rule)"></div></div>
+  <div class="panel"><h3>Coffee with Martin</h3><div class="pc"><p class="sub">Weekdays. Tick the days it happens. No pressure on the days it doesn't.</p><div class="ck" id="coffee"></div></div></div>
+  <div class="panel"><h3>Rules</h3><div class="pc"><ul class="steps">
+    <li><b>Long trips</b> go in base, lighter or recovery weeks. Never in a taper or a peak block.</li>
+    <li><b>Short trips</b> start after the Friday long run. Saturday is rest anyway.</li>
+    <li><b>No trips</b> in the 3 weeks before Plovdiv, in Bairi race week, or in the 2 weeks before Vitosha.</li>
+    <li><b>Marathon block</b> (15 Feb – 28 Mar): weekends only.</li>
+    <li><b>Vitosha build</b> (17 May – 13 Jun): only trail weekends that fit the back-to-back runs.</li>
+    <li><b>Public holidays are work days</b> (double pay). Keep trips off them where you can.</li>
+    <li><b>Plan trip 5 before June.</b></li>
+    <li><b>Buffer:</b> one weekend a month stays open, with no plans. Spontaneous things go there. If something new comes up, move a plan, don't stack it.</li>
+    <li><b>No social night before a race.</b> Late Thursdays are fine only when Friday is not a long run day.</li></ul>
+    <p style="margin-top:10px"><button class="btn ghost" id="ics">Download trips and people plans for your calendar (.ics)</button></p></div></div>
+  <div class="foot" id="store">Saving on this device</div>
+</div>
+<div class="toast" id="toast">Saved</div>
+<script src="holidays-data.js"></script>
+<script src="../shared/sync.js"></script>
+<script>
+const LKEY='lifehub-holidays';
+let state={trips:{},allow:20,social:{},coffee:{}};
+let SM=null;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const P=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const fd=s=>{const d=P(s);return DN[d.getDay()]+' '+d.getDate()+' '+MN[d.getMonth()]};
+const today=()=>{const t=new Date();t.setHours(0,0,0,0);return t};
+const PUB=Object.fromEntries(H_PUBLIC);
+let TR=[],SOC=[];
+function localGet(){try{return JSON.parse(localStorage.getItem(LKEY)||'null')}catch(e){return null}}
+function localSet(){try{localStorage.setItem(LKEY,JSON.stringify(state))}catch(e){}}
+function merge(s){if(s)state=Object.assign({trips:{},allow:20,social:{},coffee:{}},s)}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1500)}
+function save(){localSet();if(window.HubSync)HubSync.push(LKEY,state)}
+function ts(id){return state.trips[id]=state.trips[id]||{}}
+function leaveDays(t){let n=0;for(let d=P(t.from);d<=P(t.to);d.setDate(d.getDate()+1)){const w=d.getDay();if(w>0&&w<6)n++}return n}
+function lostPay(t){const o=[];for(let d=P(t.from);d<=P(t.to);d.setDate(d.getDate()+1)){const s=iso(d),w=d.getDay();if(PUB[s]&&w>0&&w<6)o.push(fd(s))}return o}
+function nights(t){return Math.round((P(t.to)-P(t.from))/864e5)}
+function conflicts(t){const out=[];
+  H_RACES.forEach(r=>{if(r.d>=t.from&&r.d<=t.to)out.push('Race day inside: '+r.n)});
+  H_BLACKOUT.forEach(b=>{if(t.from<=b.to&&t.to>=b.from){
+    if(/^No trips/.test(b.rule))out.push(b.n+': no trips');
+    else if(t.kind==='long')out.push(b.n+'. '+b.rule)}});
+  return out}
+function hero(){
+  const t0=iso(today());const nx=TR.filter(t=>t.to>=t0).sort((a,b)=>a.from.localeCompare(b.from))[0];
+  if(!nx){document.getElementById('hh').textContent='No trips planned';return}
+  const n=Math.round((P(nx.from)-today())/864e5);
+  document.getElementById('hk').textContent='Next trip';
+  document.getElementById('hh').textContent=n>0?n+(n===1?' day':' days'):'Away now';
+  const dest=ts(nx.id).dest;
+  document.getElementById('hs').innerHTML=`<b>${esc(nx.n)}</b>${dest?' to '+esc(dest):''} · ${fd(nx.from)} – ${fd(nx.to)}`;
+}
+function cal(){
+  const t0=iso(today()); let h='';
+  for(let i=0;i<13;i++){const y=2026+Math.floor((9+i)/12),m=(9+i)%12;const dim=new Date(y,m+1,0).getDate();
+    let cells='';for(let d=1;d<=31;d++){if(d>dim){cells+='<i class="nx"></i>';continue}
+      const dt=new Date(y,m,d),s=iso(dt),w=dt.getDay();let c=[];
+      if(w===0||w===6)c.push('we');
+      if(H_BLACKOUT.some(b=>s>=b.from&&s<=b.to))c.push('bo');
+      const tr=TR.find(t=>s>=t.from&&s<=t.to); if(tr)c.push(tr.kind==='long'?'tl':'ts');
+      if(H_RACES.some(r=>r.d===s))c.push('rc');
+      if(SOC.some(e=>e.date===s&&e.status!=='skip'))c.push('so');
+      if(PUB[s])c.push('ph'); if(s===t0)c.push('td');
+      const tip=[fd(s),tr?tr.n:'',PUB[s]||'',(H_RACES.find(r=>r.d===s)||{}).n||'',...SOC.filter(e=>e.date===s).map(e=>e.n)].filter(Boolean).join(' · ');
+      cells+=`<i class="${c.join(' ')}" title="${esc(tip)}"></i>`}
+    h+=`<div class="mrow"><span class="ml">${MN[m]} ${String(y).slice(2)}</span><div class="days">${cells}</div></div>`}
+  document.getElementById('cal').innerHTML=h;
+}
+function stats(){
+  const used=TR.filter(t=>t.from>='2027-01-01'&&t.from<='2027-12-31').reduce((a,t)=>a+leaveDays(t),0);
+  const all=TR.reduce((a,t)=>a+leaveDays(t),0);
+  const al=+state.allow||0;
+  document.getElementById('stats').innerHTML=`<div><b>${all}</b><span>Leave days, all trips</span></div><div><b>${used}</b><span>Leave days in 2027</span></div><div><b style="color:${al-used<0?'var(--big)':'inherit'}">${al-used}</b><span>Left in 2027</span></div>`;
+  document.getElementById('allow').value=state.allow;
+}
+const CK=[['leave','Leave approved'],['travel','Transport booked'],['stay','Stay booked'],['plan','Training week checked'],['kit','Running kit packed']];
+function tripHTML(t){
+  const s=ts(t.id), st=s.status||'Idea', fl=conflicts(t), past=t.to<iso(today());
+  return `<details class="trip" ${s.open?'open':''} data-trip="${t.id}" style="--tc:${t.kind==='long'?'var(--acc)':'var(--acc2)'}${past?';opacity:.55':''}">
+   <summary><span class="bar"></span><div class="ti"><b>${esc(t.n)}${s.dest?': '+esc(s.dest):''}</b>
+     <div class="dt">${fd(t.from)} – ${fd(t.to)} · ${nights(t)} nights · ${leaveDays(t)} leave days${t.tbc?' · dates to confirm':''}</div>
+     ${(t.from!==t.orig.from||t.to!==t.orig.to)?`<div class="mv">Moved by you</div>`:(t.moved?`<div class="mv">Moved: ${esc(t.moved)}</div>`:'')}${lostPay(t).map(x=>`<div class="mv">Misses a double-pay day: ${esc(x)}</div>`).join('')}${fl.map(f=>`<div class="flag">Clash: ${esc(f)}</div>`).join('')}</div>
+     <span class="st ${st.toLowerCase()}">${esc(st)}</span></summary>
+   <div class="tb">
+     <p><b>Training:</b> ${esc(t.phase)}. ${esc(t.train)}</p>${t.why?`<p class="sub">${esc(t.why)}</p>`:''}
+     <div class="fld">
+       <div><label>From</label><input type="date" data-date="from" data-id="${t.id}" value="${t.from}"></div>
+       <div><label>To</label><input type="date" data-date="to" data-id="${t.id}" value="${t.to}"></div>
+       ${(t.from!==t.orig.from||t.to!==t.orig.to)?`<div class="full"><button class="btn ghost" data-reset="${t.id}" style="font-size:13px;padding:5px 10px">Back to planned dates (${fd(t.orig.from)} – ${fd(t.orig.to)})</button></div>`:''}
+       <div><label>Where</label><input data-f="dest" data-id="${t.id}" value="${esc(s.dest)}" placeholder="Destination"></div>
+       <div><label>Status</label><select data-f="status" data-id="${t.id}">${['Idea','Booked','Done'].map(o=>`<option ${o===st?'selected':''}>${o}</option>`).join('')}</select></div>
+       <div><label>Budget (€)</label><input data-f="budget" data-id="${t.id}" inputmode="decimal" value="${esc(s.budget)}"></div>
+       <div><label>Who</label><input data-f="who" data-id="${t.id}" value="${esc(s.who)}" placeholder="Family, couple, solo"></div>
+       <div class="full"><label>Notes</label><textarea data-f="notes" data-id="${t.id}" rows="2">${esc(s.notes)}</textarea></div></div>
+     <div class="ck">${CK.map(([k,l])=>`<button data-ck="${k}" data-id="${t.id}" aria-pressed="${!!(s.ck&&s.ck[k])}">${l}</button>`).join('')}</div>
+   </div></details>`;
+}
+function lists(){
+  document.getElementById('long').innerHTML=TR.filter(t=>t.kind==='long').map(tripHTML).join('');
+  document.getElementById('short').innerHTML=TR.filter(t=>t.kind==='short').map(tripHTML).join('');
+}
+function social(){
+  const t0=iso(today()); if(!SM)SM=t0.slice(0,7)<'2026-11'?'2026-11':t0.slice(0,7);
+  const [y,m]=SM.split('-').map(Number); document.getElementById('smLbl').textContent=MN[m-1]+' '+y;
+  const ev=SOC.filter(e=>e.date.slice(0,7)===SM||e.ym===SM);
+  const cnt=t=>ev.filter(e=>e.type===t&&e.status!=='skip').length+' of '+H_SOCIAL_TYPES[t].per;
+  document.getElementById('social').innerHTML=`<div class="pc" style="padding-top:4px"><p class="sub">Date nights ${cnt('date')} · Best man and maid of honour ${cnt('friends')} · Godparents ${cnt('god')}</p></div>`+
+   ev.map(e=>`<div class="soc ${e.status}" style="--sc:${e.c}"><span class="bar"></span><div class="ti"><b>${esc(e.n)}</b>
+     <div class="dt">${fd(e.date)}${e.moved?' · moved by you':''}${e.date<t0&&!e.status?' · tick it or skip it':''}</div>${e.note?`<div class="mv">${esc(e.note)}</div>`:''}
+     <input type="date" data-sdate="${e.id}" value="${e.date}" aria-label="Move ${esc(e.n)}"></div>
+     <div class="sb"><button data-sst="done" data-sid="${e.id}" aria-pressed="${e.status==='done'}">Done</button><button data-sst="skip" data-sid="${e.id}" aria-pressed="${e.status==='skip'}">Skip</button></div></div>`).join('');
+  const ow=H_openWeekends(state)[SM];
+  document.getElementById('openwk').innerHTML=ow?`<p style="margin:0"><b>Open weekend:</b> ${fd(ow.from)} – ${fd(ow.to)}. Keep it free for whatever comes up.</p>`:`<p class="sub" style="margin:0">No fully open weekend this month. Skip or move one plan if you need air.</p>`;
+}
+function coffee(){
+  const t=today(), mon=new Date(t); mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  let h='';for(let i=0;i<5;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const s=iso(d);
+    h+=`<button data-coffee="${s}" aria-pressed="${!!state.coffee[s]}">${DN[d.getDay()]} ${d.getDate()}</button>`}
+  const n=Object.keys(state.coffee).filter(k=>state.coffee[k]&&k.slice(0,7)===iso(t).slice(0,7)).length;
+  document.getElementById('coffee').innerHTML=h+`<span class="sub" style="align-self:center;margin-left:6px">${n} this month</span>`;
+}
+function render(){TR=H_list(state);SOC=H_social(state);hero();cal();stats();lists();social();coffee()}
+function ics(){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Life hub//Holidays//EN'];
+  const nx=s=>{const d=P(s);d.setDate(d.getDate()+1);return iso(d).replace(/-/g,'')};
+  TR.forEach(t=>{const s=ts(t.id);L.push('BEGIN:VEVENT','UID:lifehub-'+t.id+'@glukov','DTSTAMP:20261015T000000Z',
+    'DTSTART;VALUE=DATE:'+t.from.replace(/-/g,''),'DTEND;VALUE=DATE:'+nx(t.to),
+    'SUMMARY:'+(t.kind==='long'?'TRIP — ':'Weekend — ')+t.n.replace(/[,;]/g,' ')+(s.dest?' ('+s.dest.replace(/[,;]/g,' ')+')':''),
+    'DESCRIPTION:'+(t.phase+'. '+t.train).replace(/[,;]/g,' '),'TRANSP:OPAQUE','END:VEVENT')});
+  SOC.filter(e=>e.status!=='skip').forEach(e=>{L.push('BEGIN:VEVENT','UID:lifehub-'+e.id+'@glukov','DTSTAMP:20261015T000000Z','DTSTART;VALUE=DATE:'+e.date.replace(/-/g,''),'DTEND;VALUE=DATE:'+nx(e.date),'SUMMARY:'+e.n.replace(/[,;]/g,' '),'TRANSP:TRANSPARENT','END:VEVENT')});
+  L.push('END:VCALENDAR');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([L.join('\r\n')],{type:'text/calendar'}));a.download='life-hub-trips.ics';document.body.appendChild(a);a.click();a.remove();
+}
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='allow'){state.allow=t.value;stats();save();return}
+  if(t.dataset.f&&t.dataset.id&&t.tagName!=='SELECT'){ts(t.dataset.id)[t.dataset.f]=t.value;save();if(t.dataset.f==='dest')hero()}});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.sdate&&t.value){state.social[t.dataset.sdate]=Object.assign(state.social[t.dataset.sdate]||{},{date:t.value});save();render();toast('Moved');return}
+  if(t.dataset.date&&t.dataset.id&&t.value){const o=ts(t.dataset.id);o[t.dataset.date]=t.value;const tr=TR.find(x=>x.id===t.dataset.id);
+    if(t.dataset.date==='from'&&tr){const len=Math.round((P(tr.to)-P(tr.from))/864e5);if(!o.to||o.to<t.value){const d=P(t.value);d.setDate(d.getDate()+len);o.to=iso(d)}}
+    ts(t.dataset.id).open=true;save();render();toast('Trip moved. Training updated.');return}if(t.tagName==='SELECT'&&t.dataset.id){ts(t.dataset.id).status=t.value;save();
+  const st=t.closest('details').querySelector('.st');st.textContent=t.value;st.className='st '+t.value.toLowerCase()}});
+document.addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.trip){ts(d.dataset.trip).open=d.open;localSet()}},true);
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ck){const s=ts(b.dataset.id);s.ck=s.ck||{};s.ck[b.dataset.ck]=!s.ck[b.dataset.ck];b.setAttribute('aria-pressed',s.ck[b.dataset.ck]);save();return}
+  if(b.dataset.sid){const o=state.social[b.dataset.sid]=state.social[b.dataset.sid]||{};o.status=o.status===b.dataset.sst?'':b.dataset.sst;save();render();return}
+  if(b.dataset.coffee){state.coffee[b.dataset.coffee]=!state.coffee[b.dataset.coffee];if(!state.coffee[b.dataset.coffee])delete state.coffee[b.dataset.coffee];save();coffee();return}
+  if(b.id==='smPrev'||b.id==='smNext'){let [y,m]=SM.split('-').map(Number);m+=b.id==='smNext'?1:-1;if(m<1){m=12;y--}if(m>12){m=1;y++}SM=y+'-'+String(m).padStart(2,'0');social();return}
+  if(b.dataset.reset){const o=ts(b.dataset.reset);delete o.from;delete o.to;o.open=true;save();render();return}
+  if(b.id==='ics'){ics();return}});
+merge(localGet());render();
+if(window.HubSync){HubSync.onStatus(t=>{document.getElementById('store').textContent=t==='Synced'?'Synced across devices':t});
+  HubSync.sync(LKEY,localGet()?state:null,d=>{merge(d);localSet();render()})}
+</script>
+</body>
+</html>

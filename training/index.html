@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Season 2027 — Plovdiv, Bairi, Vitosha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E4E7E9; --card:#FAFBFB; --card2:#EEF1F3; --ink:#131C22; --soft:#5C6C76; --faint:#87949C; --rule:#CBD2D6;
+  --rec:#6E9DC2; --easy:#2F7F60; --mp:#B98A22; --st:#C9702A; --hard:#8E2521; --vert:#6B4E8F;
+  --gym:#4F5F69; --test:#1F6F8B; --swim:#3C8FA6; --race:#131C22; --rest:#A7B0B5; --yoga:#8DAA84;
+  --base:#2F7F60; --build:#B98A22; --mara:#C9702A; --taper:#6E9DC2; --bairi:#6B4E8F; --vit:#8E2521;
+  --done:#E3EEE8; --shadow:0 1px 2px rgba(19,28,34,.06),0 4px 14px rgba(19,28,34,.05);
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#11171B; --card:#192127; --card2:#1F2930; --ink:#E6ECEF; --soft:#A2B0B8; --faint:#7A8890; --rule:#2E3A42;
+    --rec:#7FB0D6; --easy:#4FAE88; --mp:#D9AA45; --st:#E08A45; --hard:#D2584F; --vert:#A68BD0;
+    --gym:#93A6B2; --test:#4FAACB; --swim:#5BB4CC; --race:#E6ECEF; --rest:#5E6A71;
+    --done:#1C2E26; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#11171B; --card:#192127; --card2:#1F2930; --ink:#E6ECEF; --soft:#A2B0B8; --faint:#7A8890; --rule:#2E3A42;
+  --rec:#7FB0D6; --easy:#4FAE88; --mp:#D9AA45; --st:#E08A45; --hard:#D2584F; --vert:#A68BD0;
+  --gym:#93A6B2; --test:#4FAACB; --swim:#5BB4CC; --race:#E6ECEF; --rest:#5E6A71;
+  --done:#1C2E26; --shadow:none; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 80px}
+.cond{font-family:'Barlow Condensed','IBM Plex Sans',sans-serif}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--st);outline-offset:2px}
+.hidden{display:none!important}
+
+/* hero */
+.hero{padding:30px 0 18px}
+.hero-top{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.big{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(78px,21vw,136px);line-height:.8;letter-spacing:-.02em}
+.big-lbl{padding-bottom:8px}
+.big-lbl b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,5vw,30px);line-height:1;font-weight:700}
+.big-lbl span{color:var(--soft);font-size:14px}
+.races{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.rc{border-top:3px solid var(--c);padding:7px 0 0}
+.rc b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:19px;line-height:1.1}
+.rc span{display:block;font-size:12.5px;color:var(--soft);line-height:1.35}
+.rc.past{opacity:.45}
+
+/* season ribbon — the signature */
+.ribbon{margin-top:22px}
+.rib{display:grid;grid-template-columns:repeat(35,1fr);gap:2px;align-items:end;height:46px}
+.rib button{border:0;padding:0;height:22px;border-radius:2px;background:var(--pc);opacity:.55;cursor:pointer;position:relative}
+.rib button.light{height:14px}
+.rib button.raceW{height:34px;opacity:.9}
+.rib button.now{opacity:1;box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink)}
+.rib button.sel{opacity:1}
+.rib-k{display:flex;justify-content:space-between;font-size:12px;color:var(--soft);margin-top:7px;gap:8px}
+.phases{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--soft);margin-top:6px}
+.phases i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--rule);
+  display:flex;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:0;border-bottom:2px solid transparent;font-family:'Barlow Condensed',sans-serif;font-weight:600;
+  font-size:18px;color:var(--soft);padding:12px 12px 9px;cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+
+/* week */
+.wkbar{display:flex;align-items:center;gap:8px;margin-top:16px}
+.wkbar button{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:7px 12px;cursor:pointer}
+.wkbar button:disabled{opacity:.35;cursor:default}
+.wkbar .today{margin-left:auto}
+.banner{margin-top:12px;padding:11px 14px;border-left:3px solid var(--rec);background:var(--card);font-size:14px}
+.week{background:var(--card);border:1px solid var(--rule);border-radius:3px;margin-top:12px;box-shadow:var(--shadow);overflow:hidden}
+.wk-head{padding:15px 16px 12px;display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--rule);border-top:4px solid var(--pc)}
+.wk-head h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:27px;line-height:1;font-weight:700}
+.wk-head .sub{font-size:13px;color:var(--soft);margin-top:5px}
+.wk-num{text-align:right;flex-shrink:0;font-size:12px;color:var(--soft);line-height:1.3}
+.wk-num b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:23px;color:var(--ink);line-height:1}
+.why{padding:10px 16px;background:var(--card2);font-size:13.5px;color:var(--soft);border-bottom:1px solid var(--rule)}
+.why b{color:var(--ink)}
+.prog{padding:10px 16px 0;font-size:12.5px;color:var(--soft);display:flex;justify-content:space-between}
+.pbar{margin:6px 16px 12px;height:5px;border-radius:3px;background:var(--rule);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--easy);transition:width .3s}
+.day{border-top:1px solid var(--rule);padding:10px 16px 6px}
+.day-h{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:16px;color:var(--soft);display:flex;gap:8px;align-items:baseline}
+.day-h .dt{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:400;color:var(--faint)}
+.day-h .away{font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--test)}
+.tripnote{padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--rule);border-left:3px solid var(--test);background:var(--card)}
+.tripnote.clash{border-left-color:var(--hard);color:var(--hard);font-weight:600}
+.day-h .hd{font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--st)}
+.day.today .day-h{color:var(--ink)}
+.day.today{background:linear-gradient(90deg,var(--card2),transparent)}
+.it{display:flex;gap:11px;padding:8px 0 8px;align-items:flex-start}
+.box{flex-shrink:0;width:22px;height:22px;border:1.5px solid var(--rule);border-radius:3px;background:var(--card);cursor:pointer;
+  display:grid;place-items:center;margin-top:1px;padding:0}
+.box svg{width:14px;height:14px;opacity:0}
+.it.on .box{background:var(--easy);border-color:var(--easy)}
+.it.on .box svg{opacity:1}
+.zbar{width:4px;align-self:stretch;border-radius:2px;background:var(--zc);flex-shrink:0}
+.ib{flex:1;min-width:0}
+.it.on .ib .t{text-decoration:line-through;text-decoration-thickness:1px;color:var(--soft)}
+.t{font-weight:600;font-size:15px}
+.t small{font-weight:400;color:var(--soft);font-size:12.5px;margin-left:6px}
+.d{font-size:13.5px;color:var(--soft);margin-top:2px}
+.lg-t{background:none;border:0;padding:0;margin-top:5px;font-size:12.5px;color:var(--test);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.lg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:7px}
+.lg input,.lg textarea{width:100%;font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
+.lg textarea{grid-column:1/-1;min-height:52px;resize:vertical}
+.lg label{font-size:11.5px;color:var(--soft);display:block}
+.logged{font-size:12.5px;color:var(--easy);margin-top:3px}
+
+/* panels */
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:3px;margin-top:14px;box-shadow:var(--shadow)}
+.panel h3{margin:0;padding:14px 16px 0;font-family:'Barlow Condensed',sans-serif;font-size:23px;line-height:1.1}
+.panel .pc{padding:8px 16px 14px}
+.panel p{margin:6px 0}
+.panel ul{margin:6px 0;padding-left:18px}
+.panel li{margin:4px 0}
+.panel h4{margin:12px 0 2px;font-size:15px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--soft);font-size:12.5px;padding:6px 8px 6px 0;border-bottom:1px solid var(--rule)}
+td{padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.note{border-left:3px solid var(--mp);padding:8px 12px;background:var(--card2);margin:10px 0;font-size:14px}
+.warn{border-left-color:var(--hard)}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:10px;background:var(--card2);color:var(--soft);margin-left:4px}
+
+/* challenges */
+.ch{padding:12px 16px;border-top:1px solid var(--rule)}
+.ch:first-of-type{border-top:0}
+.ch-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ch-h b{font-size:16px}
+.ch-goal{font-size:12.5px;color:var(--soft);text-align:right}
+.ch-hist{font-size:13px;color:var(--soft);margin-top:4px}
+.ch-hist .best{color:var(--easy);font-weight:600}
+.ch-add{display:flex;gap:6px;margin-top:7px}
+.ch-add input{flex:1;min-width:0;font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
+.ch-add input[type=date]{flex:0 0 140px}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:7px 13px;cursor:pointer;font-weight:600;font-size:14px}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule)}
+.ylist{list-style:none;margin:0;padding:2px 16px 14px}
+.ylist li{padding:6px 0;border-top:1px solid var(--rule);font-size:14px}
+.ylist li:first-child{border-top:0}
+.ylist a{color:var(--ink);text-decoration:none}
+.ylist a:hover{text-decoration:underline}
+.ylist a.p::before{content:"★ ";color:var(--mp)}
+.yc{font-size:13px;color:var(--soft);font-weight:400;margin-left:8px;font-family:'IBM Plex Sans',sans-serif}
+.lg-t+.lg-t{margin-left:12px}
+.x{background:none;border:0;color:var(--faint);cursor:pointer;padding:0 3px;font-size:13px}
+
+/* check-in */
+.ci{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ci label{font-size:12.5px;color:var(--soft)}
+.ci input,.ci textarea,.ci select{width:100%;font:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
+.ci .full{grid-column:1/-1}
+.ci textarea{min-height:70px}
+#ciOut,#dataBox{width:100%;min-height:200px;font:13px/1.45 ui-monospace,Menlo,monospace;padding:10px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);margin-top:10px}
+.foot{margin-top:28px;font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.foot button{background:none;border:0;color:var(--faint);text-decoration:underline;cursor:pointer;padding:0;font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--paper);padding:7px 14px;border-radius:3px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:520px){ .races{grid-template-columns:1fr;gap:10px} .rc{display:flex;gap:10px;align-items:baseline;border-top:0;border-left:3px solid var(--c);padding:0 0 0 9px} .rc b{min-width:90px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+<style>
+.hubnav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:10px 16px 0;max-width:820px;margin:0 auto;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.hubnav::-webkit-scrollbar{display:none}
+.hubnav a{flex-shrink:0;font-size:13px;font-weight:600;text-decoration:none;color:var(--soft);padding:5px 11px;border-radius:14px;border:1px solid var(--rule)}
+.hubnav a[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style>
+</head>
+<body>
+<nav class="hubnav" aria-label="Life hub"><a href="../">Life hub</a><a href="../training/" aria-current="page">Training</a><a href="../meals/">Meals</a><a href="../holidays/">Holidays</a><a href="../car/">Car</a><a href="../money/">Money</a></nav>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="big" id="cd">—</div>
+      <div class="big-lbl"><b id="cdName">days</b><span id="cdSub"></span></div>
+    </div>
+    <div class="races" id="races"></div>
+    <div class="ribbon">
+      <div class="rib" id="rib" aria-label="Season weeks"></div>
+      <div class="rib-k"><span>26 Oct</span><span>Tap a week to open it</span><span>Late Jun</span></div>
+      <div class="phases" id="phases"></div>
+    </div>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="plan">Plan</button>
+    <button role="tab" aria-selected="false" data-tab="races">Races</button>
+    <button role="tab" aria-selected="false" data-tab="gym">Strength</button>
+    <button role="tab" aria-selected="false" data-tab="yoga">Yoga</button>
+    <button role="tab" aria-selected="false" data-tab="ch">Challenges</button>
+    <button role="tab" aria-selected="false" data-tab="zones">Zones and rules</button>
+    <button role="tab" aria-selected="false" data-tab="ci">Sunday check-in</button>
+  </nav>
+
+  <section id="tab-plan">
+    <div class="wkbar">
+      <button id="prev" aria-label="Previous week">Previous</button>
+      <button id="next" aria-label="Next week">Next</button>
+      <button class="today" id="goNow">This week</button>
+    </div>
+    <div id="restBanner" class="banner hidden"><b>Rest until Sun 25 Oct.</b> Yoga and easy swims only. Base starts Mon 26 Oct.</div>
+    <div id="week"></div>
+  </section>
+
+  <section id="tab-races" class="hidden"></section>
+  <section id="tab-gym" class="hidden"></section>
+  <section id="tab-yoga" class="hidden"></section>
+  <section id="tab-ch" class="hidden"></section>
+  <section id="tab-zones" class="hidden"></section>
+  <section id="tab-ci" class="hidden"></section>
+
+  <div class="foot"><span id="store">Saving on this device</span><button id="reset">Clear all ticks</button></div>
+</div>
+<div class="toast" id="toast">Saved</div>
+
+<script src="plan.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../holidays/holidays-data.js"></script>
+<script src="../shared/travel.js"></script>
+<script>
+/* ============ state ============ */
+const LKEY='season-2027-gl';
+let state={checks:{},logs:{},tests:[],ci:{},bairiCP:''};
+let wsel=0, openLog=null;
+const id=(w,d,i)=>`w${w+1}-${d}-${i}`;
+const curWeek=()=>{const t=today0();const n=Math.floor((t-START)/864e5/7);return Math.max(0,Math.min(W.length-1,n))};
+
+/* ============ storage: Claude account (db) with device fallback ============ */
+let db=null, uid=null, saveT=null;
+function localGet(){try{return JSON.parse(localStorage.getItem(LKEY)||'null')}catch(e){return null}}
+function localSet(){try{localStorage.setItem(LKEY,JSON.stringify(state))}catch(e){}}
+function merge(s){if(!s)return;state=Object.assign({checks:{},logs:{},tests:[],ci:{},bairiCP:''},s)}
+function save(){
+  localSet();
+  if(window.HubSync)HubSync.push(LKEY,state);
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{
+    if(db&&uid){try{await db.doc(`data/users/${uid}/season`).set({s:JSON.stringify(state),at:Date.now()});toast('Saved')}
+      catch(e){toast('Saved on this device only')}}
+    else toast('Saved on this device');
+  },700);
+}
+async function connect(){
+  try{
+    if(!window.claude||!claude.use)return;
+    const u=await claude.use('user'); db=await claude.use('db');
+    if(!db||!u){db=null;return}
+    uid=await u.id(); if(!uid){db=null;return}
+    const snap=await db.doc(`data/users/${uid}/season`).get();
+    if(snap.exists){try{merge(JSON.parse(snap.data().s));localSet()}catch(e){}}
+    else if(localGet()){save()}
+    document.getElementById('store').textContent='Saving to your Claude account';
+    renderAll();
+  }catch(e){db=null}
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1400)}
+
+/* ============ render: hero ============ */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderHero(){
+  const now=new Date();
+  const next=RACES.find(r=>r.d>now)||RACES[RACES.length-1];
+  const days=Math.max(0,Math.ceil((new Date(next.d).setHours(0,0,0,0)-today0())/864e5));
+  document.getElementById('cd').textContent=days;
+  document.getElementById('cdName').textContent=(days===1?'day':'days')+' to '+next.n;
+  document.getElementById('cdSub').textContent=next.goal+'. '+next.sub+'.';
+  document.getElementById('races').innerHTML=RACES.map(r=>`<div class="rc ${r.d<now?'past':''}" style="--c:${r.c}"><b>${esc(r.n.replace(' 50k','').replace('Asenovgradski ',''))}</b><span>${r.k==='vit'?'Late June (TBC)':DN[(r.d.getDay()+6)%7]+' '+fd(r.d)}</span><span>${esc(r.goal)}</span></div>`).join('');
+  const cw=curWeek(), started=today0()>=START;
+  document.getElementById('rib').innerHTML=W.map((w,i)=>`<button style="--pc:${PH[w.p][1]}" class="${w.light?'light':''} ${w.race?'raceW':''} ${started&&i===cw?'now':''} ${i===wsel?'sel':''}" data-w="${i}" aria-label="Week ${i+1}, ${fd(dayDate(i,0))}, ${esc(w.title)}"></button>`).join('');
+  document.getElementById('phases').innerHTML=Object.values(PH).map(p=>`<span><i style="background:${p[1]}"></i>${p[0]}</span>`).join('');
+}
+
+/* ============ render: week ============ */
+const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4"><path d="M3 8.5l3 3 7-7"/></svg>';
+function renderWeek(){
+  const w=W[wsel]; const t0=today0();
+  document.getElementById('restBanner').classList.toggle('hidden',!(t0<START&&wsel===0));
+  document.getElementById('prev').disabled=wsel===0;
+  document.getElementById('next').disabled=wsel===W.length-1;
+  let tot=0,done=0,pm=0,yd=0;
+  const lt=!!(state.lighter&&state.lighter[wsel]); const TI=Travel.week(wsel,w);
+  const days=w.days.map((items,d)=>{
+    const dt=dayDate(wsel,d); const isT=dt.getTime()===t0.getTime();
+    const trip=Travel.tripOn(dt);
+    const hard=!W[wsel].light&&!lt&&items.some(x=>x.key||x.long||x.z==='vert'||x.race);
+    const rows=items.map((x0,i)=>{ const x=Travel.adapt(x0,trip,lt);
+      const k=id(wsel,d,i); const on=!!state.checks[k]; tot++; if(on)done++; if(x.z==='yoga'){if(on)yd++}else pm+=x.m||0;
+      const lg=state.logs[k]; const canLog=x.z!=='rest'&&x.z!=='yoga';
+      const lgTxt=lg?[lg.t&&lg.t+' min',lg.km&&lg.km+' km',lg.hr&&'HR '+lg.hr,lg.n&&'“'+lg.n+'”'].filter(Boolean).join(', '):'';
+      return `<div class="it ${on?'on':''}">
+        <button class="box" data-k="${k}" aria-pressed="${on}" aria-label="Mark ${esc(x.t)} done">${CHECK}</button>
+        <span class="zbar" style="--zc:${x.yc||'var(--'+x.z+')'}"></span>
+        <div class="ib"><div class="t">${esc(x.t)}${x.m?`<small>${x.m>=60?Math.floor(x.m/60)+'h'+(x.m%60?String(x.m%60).padStart(2,'0'):''):x.m+' min'}</small>`:''}</div>
+        <div class="d">${esc(x.d)}</div>
+        ${lgTxt?`<div class="logged">Logged: ${esc(lgTxt)}</div>`:''}
+        ${x.link?`<a class="lg-t" href="${x.link}" target="_blank" rel="noopener">Open on YouTube</a>`:''}
+        ${canLog?`<button class="lg-t" data-lg="${k}">${openLog===k?'Close':(lg?'Edit log':'Log it')}</button>`:''}
+        ${openLog===k?`<div class="lg">
+          <div><label for="t-${k}">Time (min)</label><input id="t-${k}" inputmode="decimal" data-f="t" data-lk="${k}" value="${esc(lg?.t||'')}"></div>
+          <div><label for="km-${k}">Distance (km)</label><input id="km-${k}" inputmode="decimal" data-f="km" data-lk="${k}" value="${esc(lg?.km||'')}"></div>
+          <div><label for="hr-${k}">Avg HR</label><input id="hr-${k}" inputmode="numeric" data-f="hr" data-lk="${k}" value="${esc(lg?.hr||'')}"></div>
+          <textarea aria-label="Note" placeholder="How did it feel? Anything hurt?" data-f="n" data-lk="${k}">${esc(lg?.n||'')}</textarea></div>`:''}
+        </div></div>`}).join('');
+    return `<div class="day ${isT?'today':''}"><div class="day-h">${DN[d]}<span class="dt">${fd(dt)}${isT?', today':''}</span>${hard?'<span class="hd">Hard day</span>':''}${trip?`<span class="away">Away: ${esc(trip.n)}${trip.dest?', '+esc(trip.dest):''}</span>`:''}</div>${rows}</div>`;
+  }).join('');
+  const hrs=(pm/60).toFixed(1).replace('.0','');
+  document.getElementById('week').innerHTML=`<article class="week" style="--pc:${PH[w.p][1]}">
+    <div class="wk-head"><div><h2>Week ${wsel+1}: ${esc(w.title)}</h2>
+      <div class="sub">${fd(dayDate(wsel,0))} – ${fd(dayDate(wsel,6))}, ${PH[w.p][0]}${w.light?', lighter week':''}</div></div>
+      <div class="wk-num"><b>${esc(w.km)}</b>vert ${esc(w.vert)}<br>~${hrs} h planned</div></div>
+    <div class="why">${w.why}</div>
+    ${TI.clash?`<div class="tripnote clash">${esc(TI.clash)}</div>`:''}
+    ${TI.advice||lt?`<div class="tripnote">${esc(lt?'Lighter week (your choice): quality sessions are easy runs, everything is about 30% shorter. Your watch still shows the original workouts; follow this page.':TI.advice)} ${(TI.advice&&!/moved away/.test(TI.advice))||lt?`<button class="btn ghost" data-lighter="1" style="margin-top:8px">${lt?'Undo lighter week':'Make this a lighter week'}</button>`:''}</div>`:''}
+    <div class="prog"><span>${done} of ${tot} done</span><span>Yoga ${yd} of 7 days</span></div>
+    <div class="pbar"><i style="width:${tot?done/tot*100:0}%"></i></div>
+    ${days}</article>`;
+}
+
+/* ============ static tabs ============ */
+function renderRaces(){
+  document.getElementById('tab-races').innerHTML=`
+  <div class="panel"><h3>Plovdiv Marathon, Sun 18 Apr</h3><div class="pc">
+    <p><b>Goal: sub-4:30.</b> Your only all-out race this season.</p>
+    <table><tr><th>Part</th><th>Pace</th><th>Rule</th></tr>
+      <tr><td>Km 1–5</td><td>6:30–6:35</td><td>Slower than goal. Let the crowd go.</td></tr>
+      <tr><td>Km 5–30</td><td>6:22–6:25</td><td>HR cap 166 until halfway.</td></tr>
+      <tr><td>Km 30–42</td><td>Race</td><td>Speed up only if HR allows.</td></tr></table>
+    <p>Fuel: gel every 30–35 min from km 5. Practise this in every long run from February.</p></div></div>
+  <div class="panel"><h3>Asenovgradski Bairi 50 km, Sun 9 May</h3><div class="pc">
+    <p><b>Goal: finish.</b> 3 weeks after Plovdiv. Run to the cut-offs, not to a time. Last time you missed one by 10 minutes.</p>
+    <ul><li>Hike every climb from the start, even when it feels too easy.</li>
+    <li>Eat every 30 min. Set a watch alert.</li>
+    <li>Target each checkpoint 30–60 min inside its cut-off.</li></ul>
+    <h4>Your checkpoint targets</h4>
+    <p style="font-size:13.5px;color:var(--soft)">Add the 2027 cut-offs when they are published, then your target time for each.</p>
+    <div class="ci"><textarea class="full" id="bairiCP" placeholder="CP1: cut-off ..., my target ...">${esc(state.bairiCP||'')}</textarea></div></div></div>
+  <div class="panel"><h3>Vitosha 100, late June</h3><div class="pc">
+    <p><b>Goal: finish.</b> About 7 weeks after Bairi: 10 days recovery, 4 build weeks, 1 taper week.</p>
+    <ul><li>Count hours, not km. Peak week is about 10 h.</li>
+    <li>Back-to-back long runs on Friday and Saturday in May and June. Sunday is rest.</li>
+    <li>Night practice and a full kit test in the peak week.</li></ul></div></div>
+  <div class="panel"><h3>Open decisions</h3><div class="pc"><ul>
+    <li><b>Vitosha 2027 date.</b> The plan uses Sat 26 Jun as a placeholder. Move the last weeks when the date is out.</li>
+    <li><b>Vitosha and Bairi cut-offs.</b> They decide your pacing. Check when published.</li>
+    <li><b>Back-to-backs in May–June</b> move family day to Sunday for 4 weeks.</li>
+    <li><b>Early December trip dates.</b> Week 6 is the trip week. Slide it if the dates differ.</li></ul></div></div>`;
+  document.getElementById('bairiCP').addEventListener('input',e=>{state.bairiCP=e.target.value;save()});
+}
+function renderGym(){
+  document.getElementById('tab-gym').innerHTML=`
+  <div class="panel"><h3>How strength fits</h3><div class="pc">
+    <p><b>Hard days hard, easy days easy.</b> Leg strength goes on Monday, after the quality run. Upper body goes on Tuesday. Wednesday vert and Friday long run start on fresh legs.</p>
+    <table><tr><th>Phase</th><th>Sessions a week</th></tr>
+    <tr><td>Base (Oct–Dec)</td><td>3: A, B, and C on Sunday</td></tr>
+    <tr><td>Build 1 (Jan–Feb)</td><td>3: A, B, C</td></tr>
+    <tr><td>Marathon block (Feb–Mar)</td><td>2: A, B. Sunday becomes a recovery run.</td></tr>
+    <tr><td>Taper and race blocks</td><td>Maintain only. No heavy legs in the 10 days before a race.</td></tr></table>
+    <div class="note">Stop every set with 2–3 reps left (RPE 7–8). You are training for strength, not to be wrecked for Wednesday.</div></div></div>
+  <div class="panel"><h3>Gym A: lower body and power</h3><div class="pc"><p>Monday, gym, 35–40 min, after the run.</p>
+    <table><tr><th>Exercise</th><th>Sets × reps</th><th>Why</th></tr>
+    <tr><td>Box jumps (step down)</td><td>4×3</td><td>Explosive power. Full rest.</td></tr>
+    <tr><td>Kettlebell swings</td><td>4×12</td><td>Hip power. Start 16–20 kg.</td></tr>
+    <tr><td>Trap bar deadlift</td><td>4×5</td><td>Strength. From January 4×4 heavier.</td></tr>
+    <tr><td>Rear-foot elevated split squat</td><td>3×8 each leg</td><td>Single-leg strength.</td></tr>
+    <tr><td>Step-ups, knee-height box</td><td>3×10 each leg</td><td>Climbing and Bairi descents.</td></tr>
+    <tr><td>Calf raises + tib raises</td><td>3×15 each</td><td>Achilles and shins.</td></tr>
+    <tr><td>Copenhagen plank</td><td>2×20 s each side</td><td>Groin and hips.</td></tr></table></div></div>
+  <div class="panel"><h3>Gym B: upper body</h3><div class="pc"><p>Tuesday, home or gym, 30 min.</p>
+    <table><tr><th>Exercise</th><th>Sets × reps</th></tr>
+    <tr><td>Pull-ups (band if needed)</td><td>5 sets, 2 reps short of max</td></tr>
+    <tr><td>Push-ups</td><td>4 sets, 3 reps short of max</td></tr>
+    <tr><td>Rows: dumbbell or band</td><td>3×12</td></tr>
+    <tr><td>Overhead press: dumbbells, or pike push-ups at home</td><td>3×8</td></tr>
+    <tr><td>Dead hang</td><td>3 × max</td></tr>
+    <tr><td>Band face pulls</td><td>2×15</td></tr></table>
+    <p>Every second week, finish with Bring Sally Up as practice.</p></div></div>
+  <div class="panel"><h3>Hybrid sessions (Sunday, base and Build 1)</h3><div class="pc">
+    <p>Low leg load. Effort RPE 6–7. Rotate:</p>
+    <ul><li><b>C1:</b> 15 min, as many rounds as you can at a steady pace: 5 pull-ups, 10 push-ups, 15 air squats. Cindy practice.</li>
+    <li><b>C2:</b> 5×500 m row, 1 min rest. Then 3×40 m farmer carry.</li>
+    <li><b>C3:</b> Bring Sally Up, then 15 min easy row or ski erg.</li></ul></div></div>
+  <div class="panel"><h3>Every day</h3><div class="pc"><ul>
+    <li><b>Yoga and stretching, 10–15 min.</b> Dynamic warm-up before hard runs, static stretching after, never before.</li>
+    <li><b>Grease the groove:</b> 3–5 small sets of pull-ups at half your max through the day on the home bar. Never to failure.</li></ul></div></div>`;
+}
+const TESTS=[
+ {k:'sally',n:'Bring Sally Up',u:'time held (m:ss)',goal:'Finish unbroken, 3:30',lower:false},
+ {k:'cindy',n:'Cindy',u:'rounds + reps',goal:'20 rounds',lower:false},
+ {k:'fran',n:'Fran',u:'time + bar kg',goal:'Sub-10 min at 43 kg',lower:true},
+ {k:'row',n:'2k row',u:'time (m:ss)',goal:'Sub-8:00',lower:true},
+ {k:'jump',n:'Broad jump',u:'cm',goal:'Beat baseline by 15 cm',lower:false},
+ {k:'hang',n:'Dead hang',u:'time (m:ss)',goal:'2:00',lower:false},
+ {k:'pull',n:'Max pull-ups',u:'reps',goal:'15 strict',lower:false},
+ {k:'push',n:'Max push-ups',u:'reps',goal:'50',lower:false},
+ {k:'hmurph',n:'Half Murph',u:'time',goal:'Steady, Dec',lower:true},
+ {k:'murph',n:'Murph',u:'time',goal:'Sub-60, no vest, July',lower:true},
+ {k:'tenk',n:'10k',u:'time',goal:'Sub-50, March',lower:true},
+ {k:'fivek',n:'5k',u:'time',goal:'Sub-20, from July 2027',lower:true}
+];
+function renderYoga(){
+  const li=v=>`<li><a class="${v[2]?'p':''}" href="${ylink(v[0])}" target="_blank" rel="noopener">${esc(v[0])}</a></li>`;
+  const prio=YV.filter(v=>v[2]&&v[1]!=='r');
+  const sec=(c,title,txt)=>`<div class="panel"><h3>${title}<span class="yc">${YV.filter(v=>v[1]===c).length} videos</span></h3>
+    <div class="pc" style="padding-bottom:0"><p style="font-size:13.5px;color:var(--soft);margin:0 0 4px">${txt}</p></div>
+    <ul class="ylist">${YV.filter(v=>v[1]===c).map(li).join('')}</ul></div>`;
+  document.getElementById('tab-yoga').innerHTML=`
+  <div class="panel"><h3>How it fits the week</h3><div class="pc">
+    <p>Afternoons, after the morning session. Every day in the Plan tab has a <b>PM yoga</b> line with the colour for that day and a suggested video.</p>
+    <table><tr><th>Day</th><th>Afternoon yoga</th></tr>
+    <tr><td><b>Mon</b>, quality + Gym A</td><td><span style="color:var(--hard)">Red</span> allowed, once a week max. Not in taper.</td></tr>
+    <tr><td><b>Tue</b>, recovery + Gym B</td><td><span style="color:var(--mp)">Amber</span></td></tr>
+    <tr><td><b>Wed</b>, vert</td><td><span style="color:var(--easy)">Green</span></td></tr>
+    <tr><td><b>Thu</b>, day before long run</td><td><span style="color:var(--easy)">Green</span> only, light. No deep hip openers.</td></tr>
+    <tr><td><b>Fri</b>, long run</td><td>Restorative or fascia release, evening</td></tr>
+    <tr><td><b>Sat</b>, rest</td><td><span style="color:var(--easy)">Green</span>, restorative</td></tr>
+    <tr><td><b>Sun</b>, light day</td><td><span style="color:var(--mp)">Amber</span></td></tr>
+    <tr><td><b>Lighter weeks</b></td><td><span style="color:var(--easy)">Green</span> only</td></tr>
+    <tr><td><b>Race weeks</b></td><td>Sleep and breathwork only</td></tr></table>
+    <div class="note warn"><b>The test:</b> if a session gives you DOMS, it was training, not recovery. It counts against your strength sessions for the week, not on top of them.</div></div></div>
+  <div class="panel"><h3>★ Priority<span class="yc">${prio.length} videos</span></h3>
+    <div class="pc" style="padding-bottom:0"><p style="font-size:13.5px;color:var(--soft);margin:0 0 4px">Ankles, toes, knees, hips, back and fascia. These protect you through the vert and the ultras.</p></div>
+    <ul class="ylist">${prio.map(li).join('')}</ul></div>
+  ${sec('g','Green: daily','Yin, restorative, mobility, breathwork, sleep. You should finish looser than you started.')}
+  ${sec('a','Amber: twice a week','Moderate flows. Not the day before the long run, not the day after.')}
+  ${sec('r','Red: once a week max','Training, not recovery. Arm balances and handstands are fine in base (Nov–Jan) as upper-body work. Drop them from mid-February, when the marathon block starts.')}`;
+}
+function renderCh(){
+  const el=document.getElementById('tab-ch');
+  const t0=new Date(); const iso=`${t0.getFullYear()}-${String(t0.getMonth()+1).padStart(2,'0')}-${String(t0.getDate()).padStart(2,'0')}`;
+  el.innerHTML=`<div class="panel"><h3>Challenges</h3><div class="pc" style="padding-bottom:4px">
+    <p>Tests: early Nov, late Dec, late Jan, early Mar. Then paused until July. Never within 10 days of a race.</p></div>
+    ${TESTS.map(t=>{const h=state.tests.filter(x=>x.k===t.k);
+      return `<div class="ch"><div class="ch-h"><b>${t.n}</b><span class="ch-goal">Goal: ${esc(t.goal)}</span></div>
+      <div class="ch-hist">${h.length?h.map((x,i)=>`${i===h.length-1?'<span class="best">':''}${esc(x.date.slice(5).split('-').reverse().join('.'))}: ${esc(x.v)}${i===h.length-1?'</span>':''} <button class="x" data-del="${state.tests.indexOf(x)}" aria-label="Delete result">✕</button>`).join(', '):'No result yet.'}</div>
+      <div class="ch-add"><input type="date" value="${iso}" id="d-${t.k}" aria-label="Date"><input placeholder="${esc(t.u)}" id="v-${t.k}" aria-label="${esc(t.n)} result"><button class="btn" data-add="${t.k}">Add</button></div></div>`}).join('')}</div>`;
+}
+function renderZones(){
+  document.getElementById('tab-zones').innerHTML=`
+  <div class="panel"><h3>Heart rate zones</h3><div class="pc"><p>HRmax 207, threshold HR 182.</p><div class="tw">
+    <table><tr><th>Zone</th><th>HR</th><th>Used for</th></tr>
+    <tr><td><span class="sw" style="background:var(--rec)"></span>Recovery</td><td>under 148</td><td>Recovery runs, day after hard days</td></tr>
+    <tr><td><span class="sw" style="background:var(--easy)"></span>Easy</td><td>148–160</td><td>Easy and long runs. About 80% of all running.</td></tr>
+    <tr><td><span class="sw" style="background:var(--mp)"></span>Marathon</td><td>158–168</td><td>Marathon pace, floats, dress rehearsal</td></tr>
+    <tr><td><span class="sw" style="background:var(--st)"></span>Sub-threshold</td><td>170–176</td><td>Norwegian-style Monday reps</td></tr>
+    <tr><td><span class="sw" style="background:var(--hard)"></span>Hard</td><td>185–200</td><td>4×4, 10k test</td></tr>
+    <tr><td><span class="sw" style="background:var(--vert)"></span>Vert</td><td>by feel</td><td>Hike hard up, easy down</td></tr></table></div></div></div>
+  <div class="panel"><h3>Paces</h3><div class="pc"><table>
+    <tr><th>What</th><th>Pace</th></tr>
+    <tr><td>Marathon pace (sub-4:30)</td><td>6:24/km</td></tr>
+    <tr><td>10k goal (sub-50)</td><td>5:00/km</td></tr>
+    <tr><td>800 m reps</td><td>5:15/km, 4:12 each</td></tr>
+    <tr><td>Floats, Feb → Mar</td><td>7:15 → 7:00 → 6:45 → 6:30 → 6:24/km</td></tr></table>
+    <p style="font-size:13.5px;color:var(--soft)">Easy runs go by HR, not pace.</p></div></div>
+  <div class="panel"><h3>Coach rules</h3><div class="pc"><ul>
+    <li><b>Morning HR 7+ above normal:</b> today becomes a rest day.</li>
+    <li><b>Pain longer than 2–3 days:</b> drop the load first, then tell Claude in the check-in.</li>
+    <li><b>Never two hard days in a row.</b> If a day moves, move the easy day, not the hard one.</li>
+    <li><b>Missed a session?</b> Do not make it up. Carry on with the plan.</li>
+    <li><b>Garmin load ratio above 1.3:</b> cut the next 2 days to easy.</li>
+    <li><b>Heat above 25 °C:</b> follow HR, let pace go.</li>
+    <li><b>Runs over 90 min:</b> eat every 30–40 min.</li>
+    <li><b>Weight loss:</b> small, steady deficit on easy days. Eat fully around hard days and long runs.</li></ul></div></div>`;
+}
+function weekSummary(){
+  const w=W[wsel]; const ci=state.ci[wsel]||{};
+  let lines=[`Week ${wsel+1} (${fd(dayDate(wsel,0))}–${fd(dayDate(wsel,6))}): ${w.title}. Target ${w.km}, vert ${w.vert}.`];
+  let km=0,min=0,yd=0;
+  w.days.forEach((items,d)=>items.forEach((x,i)=>{const k=id(wsel,d,i);if(x.z==='rest')return;if(x.z==='yoga'){if(state.checks[k])yd++;return}const lg=state.logs[k]||{};
+    if(lg.km)km+=parseFloat(lg.km)||0; if(lg.t)min+=parseFloat(lg.t)||0;
+    lines.push(`${state.checks[k]?'[x]':'[ ]'} ${DN[d]} ${x.t}${lg.t||lg.km||lg.hr?` — ${[lg.t&&lg.t+' min',lg.km&&lg.km+' km',lg.hr&&'HR '+lg.hr].filter(Boolean).join(', ')}`:''}${lg.n?` — "${lg.n}"`:''}`)}));
+  lines.push(`Logged: ${km.toFixed(1)} km, ${Math.round(min)} min. Yoga: ${yd} of 7 days.`);
+  if(ci.rhr)lines.push(`Resting HR: ${ci.rhr}`); if(ci.wt)lines.push(`Weight: ${ci.wt} kg`);
+  if(ci.load)lines.push(`Garmin load ratio: ${ci.load}`); if(ci.sleep)lines.push(`Sleep: ${ci.sleep}`);
+  if(ci.pain)lines.push(`Pain or niggles: ${ci.pain}`); if(ci.notes)lines.push(`Notes: ${ci.notes}`);
+  lines.push('Please review this week and adjust next week if needed.');
+  return lines.join('\n');
+}
+function renderCI(){
+  const ci=state.ci[wsel]||{};
+  document.getElementById('tab-ci').innerHTML=`<div class="panel"><h3>Sunday check-in, week ${wsel+1}</h3><div class="pc">
+    <p>Fill this in on Sunday, copy it, and paste it to Claude. Claude adjusts next week from it.</p>
+    <div class="ci">
+      <div><label for="ci-rhr">Avg morning HR</label><input id="ci-rhr" data-ci="rhr" inputmode="numeric" value="${esc(ci.rhr||'')}"></div>
+      <div><label for="ci-wt">Weight (kg)</label><input id="ci-wt" data-ci="wt" inputmode="decimal" value="${esc(ci.wt||'')}"></div>
+      <div><label for="ci-load">Garmin load ratio</label><input id="ci-load" data-ci="load" inputmode="decimal" value="${esc(ci.load||'')}"></div>
+      <div><label for="ci-sleep">Sleep</label><select id="ci-sleep" data-ci="sleep">${['','Good','OK','Poor'].map(o=>`<option ${ci.sleep===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      <div class="full"><label for="ci-pain">Pain or niggles</label><input id="ci-pain" data-ci="pain" value="${esc(ci.pain||'')}" placeholder="None, or where and how long"></div>
+      <div class="full"><label for="ci-notes">How the week felt</label><textarea id="ci-notes" data-ci="notes">${esc(ci.notes||'')}</textarea></div>
+    </div>
+    <p style="margin-top:12px"><button class="btn" id="ciCopy">Copy check-in</button> <button class="btn ghost" id="ciShow">Show text</button></p>
+    <textarea id="ciOut" class="hidden" readonly aria-label="Check-in text"></textarea>
+    <p style="font-size:13px;color:var(--soft)">Uses the week shown in the Plan tab. Change weeks there.</p></div></div>
+  <div class="panel"><h3>Export and import</h3><div class="pc">
+    <p style="font-size:13.5px">Back up your data, move it between devices, or paste it to Claude for a review.</p>
+    <p><button class="btn" id="exSum">Copy summary</button> <button class="btn ghost" id="exRaw">Copy backup</button> <button class="btn ghost" id="imBtn">Import</button></p>
+    <textarea id="dataBox" rows="7" aria-label="Export and import data" placeholder="Exported data shows here. To import, paste a backup and press Import."></textarea>
+    <p id="dataMsg" style="font-size:12.5px;color:var(--soft);margin:6px 0 0"></p>
+    <p style="font-size:13px;color:var(--soft)"><b>Copy summary</b> gives readable text for the whole season so far: sessions, logs, tests and check-ins. Paste it into a chat. <b>Copy backup</b> gives the full data, to restore or move devices. Import merges into what is already here. It does not delete anything.</p></div></div>
+  <div class="panel"><h3>Intervals.icu sync</h3><div class="pc">
+    <p style="font-size:13.5px">Fills in your runs, walks, swims, strength and yoga from Intervals.icu: ticks the session and logs time, km and HR. Works on the GitHub Pages version. Set-up steps are at the top of Code.gs.</p>
+    <div class="ci">
+      <div class="full"><label for="syUrl">Apps Script web app URL</label><input id="syUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(syncCfg().url||'')}"></div>
+      <div class="full"><label for="syTok">Sync token</label><input id="syTok" type="password" value="${esc(syncCfg().tok||'')}"></div>
+    </div>
+    <p style="margin-top:10px"><button class="btn" id="sySave">Save and sync</button> <button class="btn ghost" id="syNow">Sync now</button></p>
+    <p id="syMsg" style="font-size:12.5px;color:var(--soft);margin:4px 0 0">${esc(syncCfg().last?'Last sync: '+syncCfg().last:'Not synced yet.')}</p>
+    <p style="font-size:13px;color:var(--soft)">It syncs by itself each time you open the tracker. It never overwrites a log you typed yourself. On a day with two runs, the longer run goes to the main session.</p></div></div>`;
+}
+function seasonSummary(){
+  const L=['SEASON 2027 TRACKER, export '+new Date().toISOString().slice(0,10),
+    'Races: Plovdiv 18 Apr (sub-4:30), Bairi 9 May (finish), Vitosha late Jun (finish). HRmax 207, threshold HR 182.'];
+  const last=Math.max(curWeek(),...Object.keys(state.checks).concat(Object.keys(state.logs)).map(k=>parseInt(k.slice(1))-1).filter(n=>!isNaN(n)));
+  for(let wi=0;wi<=last&&wi<W.length;wi++){
+    const w=W[wi]; let tot=0,dn=0,km=0,min=0,yd=0; const rows=[];
+    w.days.forEach((items,d)=>items.forEach((x,i)=>{const k=id(wi,d,i);if(x.z==='rest')return;
+      if(x.z==='yoga'){if(state.checks[k])yd++;return}
+      tot++; if(state.checks[k])dn++; const lg=state.logs[k];
+      if(lg){km+=parseFloat(lg.km)||0;min+=parseFloat(lg.t)||0}
+      if(state.checks[k]||lg)rows.push(`  ${state.checks[k]?'[x]':'[ ]'} ${DN[d]} ${x.t}${lg?' — '+[lg.t&&lg.t+' min',lg.km&&lg.km+' km',lg.hr&&'HR '+lg.hr,lg.n&&'"'+lg.n+'"'].filter(Boolean).join(', '):''}`)}));
+    L.push('',`Week ${wi+1} (${fd(dayDate(wi,0))}–${fd(dayDate(wi,6))}), ${w.title}. Target ${w.km}. Done ${dn}/${tot}. Logged ${km.toFixed(1)} km, ${Math.round(min)} min. Yoga ${yd}/7.`);
+    rows.forEach(r=>L.push(r));
+    const ci=state.ci[wi]; if(ci){const c=[ci.rhr&&'RHR '+ci.rhr,ci.wt&&ci.wt+' kg',ci.load&&'load '+ci.load,ci.sleep&&'sleep '+ci.sleep,ci.pain&&'pain: '+ci.pain,ci.notes&&'notes: '+ci.notes].filter(Boolean);if(c.length)L.push('  Check-in: '+c.join(', '))}
+  }
+  if(state.tests.length){L.push('','TESTS');state.tests.forEach(t=>{const n=(TESTS.find(x=>x.k===t.k)||{}).n||t.k;L.push(`  ${t.date} ${n}: ${t.v}`)})}
+  if(state.bairiCP)L.push('','BAIRI CHECKPOINTS',state.bairiCP);
+  return L.join('\n');
+}
+function copyOut(text,label){
+  const b=document.getElementById('dataBox'),m=document.getElementById('dataMsg'); b.value=text;
+  const done=ok=>{m.textContent=ok?label+' copied.':'Select the text in the box and copy it.'; if(!ok)b.select()};
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>done(true),()=>done(false)); else done(false) }catch(e){done(false)}
+}
+function importData(){
+  const b=document.getElementById('dataBox'),m=document.getElementById('dataMsg'); const raw=b.value.trim();
+  if(!raw){m.textContent='Paste a backup into the box first.';return}
+  let inc; try{inc=JSON.parse(raw)}catch(e){m.textContent='This is not a valid backup. Paste the text from "Copy backup".';return}
+  if(!inc||typeof inc!=='object'||Array.isArray(inc)){m.textContent='This is not a valid backup.';return}
+  let n=0;
+  if(inc.checks&&typeof inc.checks==='object')Object.keys(inc.checks).forEach(k=>{if(inc.checks[k]){state.checks[k]=true;n++}});
+  if(inc.logs&&typeof inc.logs==='object')Object.keys(inc.logs).forEach(k=>{state.logs[k]=Object.assign({},state.logs[k]||{},inc.logs[k]);n++});
+  if(inc.ci&&typeof inc.ci==='object')Object.keys(inc.ci).forEach(k=>{state.ci[k]=Object.assign({},state.ci[k]||{},inc.ci[k]);n++});
+  if(Array.isArray(inc.tests))inc.tests.forEach(t=>{if(t&&t.k&&!state.tests.some(x=>x.k===t.k&&x.date===t.date&&x.v===t.v)){state.tests.push(t);n++}});
+  state.tests.sort((a,c)=>String(a.date).localeCompare(String(c.date)));
+  if(inc.bairiCP&&!state.bairiCP){state.bairiCP=inc.bairiCP;n++}
+  save(); renderHero();renderWeek();renderRaces();renderCh();renderCI();
+  document.getElementById('dataMsg').textContent='Imported and merged '+n+' entries.';
+}
+/* ============ Intervals.icu sync (via Apps Script) ============ */
+const SKEY='season-2027-sync';
+function syncCfg(){try{return JSON.parse(localStorage.getItem(SKEY)||'{}')}catch(e){return {}}}
+function setSyncCfg(c){try{localStorage.setItem(SKEY,JSON.stringify(c))}catch(e){}}
+function syMsg(t){const m=document.getElementById('syMsg');if(m)m.textContent=t}
+const RUNZ=['easy','rec','st','hard','mp','vert','race'];
+function slotsFor(type,items){
+  const t=type.toLowerCase();
+  if(/swim/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>x.z==='swim');
+  if(/yoga|pilates|stretch|breath|mobility/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>x.z==='yoga');
+  if(/weight|strength|hiit|workout|crossfit|rowing|training/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>x.z==='gym'||(x.z==='test'&&!/10k|run/i.test(x.t)));
+  if(/walk|hike/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>/walk/i.test(x.t)||x.z==='vert');
+  if(/run/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>RUNZ.includes(x.z)&&!/walk/i.test(x.t));
+  return [];
+}
+async function runSync(manual){
+  const c=syncCfg(); if(!c.url||!c.tok){if(manual)syMsg('Add the URL and token first.');return}
+  syMsg('Syncing…');
+  let data;
+  try{
+    const r=await fetch(c.url+(c.url.includes('?')?'&':'?')+'t='+encodeURIComponent(c.tok)+'&oldest=2026-10-26');
+    data=await r.json();
+  }catch(e){syMsg('Sync failed: could not reach Apps Script. This works on the GitHub Pages version, not inside Claude.');return}
+  if(!data||data.error){syMsg('Sync failed: '+((data&&data.error)||'no data'));return}
+  state.synced=state.synced||{};
+  const byDay={};
+  (data.activities||[]).forEach(a=>{
+    if(state.synced[a.id])return;
+    const ds=String(a.date).slice(0,10).split('-').map(Number); if(ds.length<3)return;
+    const dt=new Date(ds[0],ds[1]-1,ds[2]); const diff=Math.round((dt-START)/864e5);
+    if(diff<0)return; const wi=Math.floor(diff/7), d=diff%7; if(wi>=W.length)return;
+    (byDay[wi+'-'+d]=byDay[wi+'-'+d]||[]).push(a);
+  });
+  let n=0;
+  Object.keys(byDay).forEach(key=>{
+    const [wi,d]=key.split('-').map(Number); const items=W[wi].days[d];
+    byDay[key].sort((a,b)=>b.moving_time-a.moving_time).forEach(a=>{
+      const free=slotsFor(a.type,items).filter(([x,i])=>{const k=id(wi,d,i);return !Object.values(state.synced).includes(k)&&!(state.logs[k]&&!state.logs[k].src)});
+      if(!free.length)return;
+      free.sort((p,q)=>((q[0].key||q[0].long||q[0].race?2:0)+(q[0].z==='vert'?1:0))-((p[0].key||p[0].long||p[0].race?2:0)+(p[0].z==='vert'?1:0)));
+      const k=id(wi,d,free[0][1]);
+      state.logs[k]=Object.assign({},state.logs[k]||{},{t:String(Math.round(a.moving_time/60)),km:a.distance?(a.distance/1000).toFixed(2):'',hr:a.avg_hr?String(Math.round(a.avg_hr)):'',src:'icu'});
+      state.checks[k]=true; state.synced[a.id]=k; n++;
+    });
+  });
+  const now=new Date(); c.last=now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+now.toTimeString().slice(0,5)+', '+n+' new'; setSyncCfg(c);
+  if(n){save();renderWeek()}
+  syMsg('Last sync: '+c.last+'.');
+}
+function autoSync(){if(syncCfg().url)runSync(false)}
+function renderAll(){renderHero();renderWeek();renderRaces();renderGym();renderYoga();renderCh();renderZones();renderCI()}
+
+/* ============ events ============ */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  if(b.dataset.k){const k=b.dataset.k;state.checks[k]=!state.checks[k];if(!state.checks[k])delete state.checks[k];renderWeek();save();return}
+  if(b.dataset.lighter){state.lighter=state.lighter||{};state.lighter[wsel]=!state.lighter[wsel];if(!state.lighter[wsel])delete state.lighter[wsel];renderWeek();save();return}
+  if(b.dataset.lg){openLog=openLog===b.dataset.lg?null:b.dataset.lg;renderWeek();if(openLog){const i=document.getElementById('t-'+openLog);i&&i.focus()}return}
+  if(b.dataset.w!=null){wsel=+b.dataset.w;openLog=null;renderHero();renderWeek();renderCI();tab('plan');return}
+  if(b.dataset.tab){tab(b.dataset.tab);return}
+  if(b.dataset.add){const k=b.dataset.add;const v=document.getElementById('v-'+k).value.trim();const d=document.getElementById('d-'+k).value;
+    if(!v){document.getElementById('v-'+k).focus();return}
+    state.tests.push({k,date:d||new Date().toISOString().slice(0,10),v});state.tests.sort((a,b)=>a.date.localeCompare(b.date));renderCh();save();return}
+  if(b.dataset.del!=null){if(!confirm('Delete this result?'))return;state.tests.splice(+b.dataset.del,1);renderCh();save();return}
+  if(b.id==='prev'&&wsel>0){wsel--;openLog=null;renderHero();renderWeek();renderCI();return}
+  if(b.id==='next'&&wsel<W.length-1){wsel++;openLog=null;renderHero();renderWeek();renderCI();return}
+  if(b.id==='goNow'){wsel=curWeek();openLog=null;renderHero();renderWeek();renderCI();return}
+  if(b.id==='reset'){if(!confirm('Clear every ticked session? Logs and test results stay.'))return;state.checks={};renderWeek();save();return}
+  if(b.id==='sySave'){const c=syncCfg();c.url=document.getElementById('syUrl').value.trim();c.tok=document.getElementById('syTok').value.trim();setSyncCfg(c);runSync(true);return}
+  if(b.id==='syNow'){runSync(true);return}
+  if(b.id==='exSum'){copyOut(seasonSummary(),'Summary');return}
+  if(b.id==='exRaw'){copyOut(JSON.stringify(state),'Backup');return}
+  if(b.id==='imBtn'){importData();return}
+  if(b.id==='ciShow'||b.id==='ciCopy'){const o=document.getElementById('ciOut');o.value=weekSummary();o.classList.remove('hidden');
+    if(b.id==='ciCopy'){(navigator.clipboard?navigator.clipboard.writeText(o.value):Promise.reject()).then(()=>toast('Copied')).catch(()=>{o.select();toast('Select all and copy')})}
+    else{o.select()}return}
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.lk){const k=t.dataset.lk;state.logs[k]=state.logs[k]||{};state.logs[k][t.dataset.f]=t.value;
+    if(!Object.values(state.logs[k]).some(Boolean))delete state.logs[k];save();return}
+  if(t.dataset.ci){state.ci[wsel]=state.ci[wsel]||{};state.ci[wsel][t.dataset.ci]=t.value;save()}
+});
+document.addEventListener('change',e=>{if(e.target.dataset.ci){state.ci[wsel]=state.ci[wsel]||{};state.ci[wsel][e.target.dataset.ci]=e.target.value;save()}});
+function tab(n){
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x.dataset.tab===n?'true':'false'));
+  ['plan','races','gym','yoga','ch','zones','ci'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('hidden',t!==n));
+  if(n==='plan')renderWeek();
+}
+
+/* ============ start ============ */
+merge(localGet());
+wsel=curWeek();
+renderAll();
+connect();
+if(window.HubSync){HubSync.onStatus(t=>{const el=document.getElementById('store');if(el)el.textContent=t==='Synced'?'Synced across devices':t});if(HubSync.on())document.getElementById('store').textContent='Syncing…'}
+(window.HubSync?HubSync.sync(LKEY,state,d=>{merge(d);localSet();renderAll()}):Promise.resolve()).then(autoSync);
+</script>
+</body>
+</html>
