@@ -164,7 +164,7 @@ td{padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
 .ci input,.ci textarea,.ci select{width:100%;font:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
 .ci .full{grid-column:1/-1}
 .ci textarea{min-height:70px}
-#ciOut{width:100%;min-height:200px;font:13px/1.45 ui-monospace,Menlo,monospace;padding:10px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);margin-top:10px}
+#ciOut,#dataBox{width:100%;min-height:200px;font:13px/1.45 ui-monospace,Menlo,monospace;padding:10px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);margin-top:10px}
 .foot{margin-top:28px;font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .foot button{background:none;border:0;color:var(--faint);text-decoration:underline;cursor:pointer;padding:0;font-size:12.5px}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);
@@ -834,7 +834,7 @@ function renderCh(){
 }
 function renderZones(){
   document.getElementById('tab-zones').innerHTML=`
-  <div class="panel"><h3>Heart rate zones</h3><div class="pc"><p>HRmax 210, threshold HR 182.</p><div class="tw">
+  <div class="panel"><h3>Heart rate zones</h3><div class="pc"><p>HRmax 207, threshold HR 182.</p><div class="tw">
     <table><tr><th>Zone</th><th>HR</th><th>Used for</th></tr>
     <tr><td><span class="sw" style="background:var(--rec)"></span>Recovery</td><td>under 148</td><td>Recovery runs, day after hard days</td></tr>
     <tr><td><span class="sw" style="background:var(--easy)"></span>Easy</td><td>148–160</td><td>Easy and long runs. About 80% of all running.</td></tr>
@@ -887,8 +887,110 @@ function renderCI(){
     </div>
     <p style="margin-top:12px"><button class="btn" id="ciCopy">Copy check-in</button> <button class="btn ghost" id="ciShow">Show text</button></p>
     <textarea id="ciOut" class="hidden" readonly aria-label="Check-in text"></textarea>
-    <p style="font-size:13px;color:var(--soft)">Uses the week shown in the Plan tab. Change weeks there.</p></div></div>`;
+    <p style="font-size:13px;color:var(--soft)">Uses the week shown in the Plan tab. Change weeks there.</p></div></div>
+  <div class="panel"><h3>Export and import</h3><div class="pc">
+    <p style="font-size:13.5px">Back up your data, move it between devices, or paste it to Claude for a review.</p>
+    <p><button class="btn" id="exSum">Copy summary</button> <button class="btn ghost" id="exRaw">Copy backup</button> <button class="btn ghost" id="imBtn">Import</button></p>
+    <textarea id="dataBox" rows="7" aria-label="Export and import data" placeholder="Exported data shows here. To import, paste a backup and press Import."></textarea>
+    <p id="dataMsg" style="font-size:12.5px;color:var(--soft);margin:6px 0 0"></p>
+    <p style="font-size:13px;color:var(--soft)"><b>Copy summary</b> gives readable text for the whole season so far: sessions, logs, tests and check-ins. Paste it into a chat. <b>Copy backup</b> gives the full data, to restore or move devices. Import merges into what is already here. It does not delete anything.</p></div></div>
+  <div class="panel"><h3>Intervals.icu sync</h3><div class="pc">
+    <p style="font-size:13.5px">Fills in your runs, walks and swims from Intervals.icu: ticks the session and logs time, km and HR. Works on the GitHub Pages version. Set-up steps are at the top of Code.gs.</p>
+    <div class="ci">
+      <div class="full"><label for="syUrl">Apps Script web app URL</label><input id="syUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(syncCfg().url||'')}"></div>
+      <div class="full"><label for="syTok">Sync token</label><input id="syTok" type="password" value="${esc(syncCfg().tok||'')}"></div>
+    </div>
+    <p style="margin-top:10px"><button class="btn" id="sySave">Save and sync</button> <button class="btn ghost" id="syNow">Sync now</button></p>
+    <p id="syMsg" style="font-size:12.5px;color:var(--soft);margin:4px 0 0">${esc(syncCfg().last?'Last sync: '+syncCfg().last:'Not synced yet.')}</p>
+    <p style="font-size:13px;color:var(--soft)">It syncs by itself each time you open the tracker. It never overwrites a log you typed yourself. On a day with two runs, the longer run goes to the main session.</p></div></div>`;
 }
+function seasonSummary(){
+  const L=['SEASON 2027 TRACKER, export '+new Date().toISOString().slice(0,10),
+    'Races: Plovdiv 18 Apr (sub-4:30), Bairi 9 May (finish), Vitosha late Jun (finish). HRmax 207, threshold HR 182.'];
+  const last=Math.max(curWeek(),...Object.keys(state.checks).concat(Object.keys(state.logs)).map(k=>parseInt(k.slice(1))-1).filter(n=>!isNaN(n)));
+  for(let wi=0;wi<=last&&wi<W.length;wi++){
+    const w=W[wi]; let tot=0,dn=0,km=0,min=0,yd=0; const rows=[];
+    w.days.forEach((items,d)=>items.forEach((x,i)=>{const k=id(wi,d,i);if(x.z==='rest')return;
+      if(x.z==='yoga'){if(state.checks[k])yd++;return}
+      tot++; if(state.checks[k])dn++; const lg=state.logs[k];
+      if(lg){km+=parseFloat(lg.km)||0;min+=parseFloat(lg.t)||0}
+      if(state.checks[k]||lg)rows.push(`  ${state.checks[k]?'[x]':'[ ]'} ${DN[d]} ${x.t}${lg?' — '+[lg.t&&lg.t+' min',lg.km&&lg.km+' km',lg.hr&&'HR '+lg.hr,lg.n&&'"'+lg.n+'"'].filter(Boolean).join(', '):''}`)}));
+    L.push('',`Week ${wi+1} (${fd(dayDate(wi,0))}–${fd(dayDate(wi,6))}), ${w.title}. Target ${w.km}. Done ${dn}/${tot}. Logged ${km.toFixed(1)} km, ${Math.round(min)} min. Yoga ${yd}/7.`);
+    rows.forEach(r=>L.push(r));
+    const ci=state.ci[wi]; if(ci){const c=[ci.rhr&&'RHR '+ci.rhr,ci.wt&&ci.wt+' kg',ci.load&&'load '+ci.load,ci.sleep&&'sleep '+ci.sleep,ci.pain&&'pain: '+ci.pain,ci.notes&&'notes: '+ci.notes].filter(Boolean);if(c.length)L.push('  Check-in: '+c.join(', '))}
+  }
+  if(state.tests.length){L.push('','TESTS');state.tests.forEach(t=>{const n=(TESTS.find(x=>x.k===t.k)||{}).n||t.k;L.push(`  ${t.date} ${n}: ${t.v}`)})}
+  if(state.bairiCP)L.push('','BAIRI CHECKPOINTS',state.bairiCP);
+  return L.join('\n');
+}
+function copyOut(text,label){
+  const b=document.getElementById('dataBox'),m=document.getElementById('dataMsg'); b.value=text;
+  const done=ok=>{m.textContent=ok?label+' copied.':'Select the text in the box and copy it.'; if(!ok)b.select()};
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>done(true),()=>done(false)); else done(false) }catch(e){done(false)}
+}
+function importData(){
+  const b=document.getElementById('dataBox'),m=document.getElementById('dataMsg'); const raw=b.value.trim();
+  if(!raw){m.textContent='Paste a backup into the box first.';return}
+  let inc; try{inc=JSON.parse(raw)}catch(e){m.textContent='This is not a valid backup. Paste the text from "Copy backup".';return}
+  if(!inc||typeof inc!=='object'||Array.isArray(inc)){m.textContent='This is not a valid backup.';return}
+  let n=0;
+  if(inc.checks&&typeof inc.checks==='object')Object.keys(inc.checks).forEach(k=>{if(inc.checks[k]){state.checks[k]=true;n++}});
+  if(inc.logs&&typeof inc.logs==='object')Object.keys(inc.logs).forEach(k=>{state.logs[k]=Object.assign({},state.logs[k]||{},inc.logs[k]);n++});
+  if(inc.ci&&typeof inc.ci==='object')Object.keys(inc.ci).forEach(k=>{state.ci[k]=Object.assign({},state.ci[k]||{},inc.ci[k]);n++});
+  if(Array.isArray(inc.tests))inc.tests.forEach(t=>{if(t&&t.k&&!state.tests.some(x=>x.k===t.k&&x.date===t.date&&x.v===t.v)){state.tests.push(t);n++}});
+  state.tests.sort((a,c)=>String(a.date).localeCompare(String(c.date)));
+  if(inc.bairiCP&&!state.bairiCP){state.bairiCP=inc.bairiCP;n++}
+  save(); renderHero();renderWeek();renderRaces();renderCh();renderCI();
+  document.getElementById('dataMsg').textContent='Imported and merged '+n+' entries.';
+}
+/* ============ Intervals.icu sync (via Apps Script) ============ */
+const SKEY='season-2027-sync';
+function syncCfg(){try{return JSON.parse(localStorage.getItem(SKEY)||'{}')}catch(e){return {}}}
+function setSyncCfg(c){try{localStorage.setItem(SKEY,JSON.stringify(c))}catch(e){}}
+function syMsg(t){const m=document.getElementById('syMsg');if(m)m.textContent=t}
+const RUNZ=['easy','rec','st','hard','mp','vert','race'];
+function slotsFor(type,items){
+  const t=type.toLowerCase();
+  if(/swim/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>x.z==='swim');
+  if(/walk|hike/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>/walk/i.test(x.t)||x.z==='vert');
+  if(/run/.test(t))return items.map((x,i)=>[x,i]).filter(([x])=>RUNZ.includes(x.z)&&!/walk/i.test(x.t));
+  return [];
+}
+async function runSync(manual){
+  const c=syncCfg(); if(!c.url||!c.tok){if(manual)syMsg('Add the URL and token first.');return}
+  syMsg('Syncing…');
+  let data;
+  try{
+    const r=await fetch(c.url+(c.url.includes('?')?'&':'?')+'t='+encodeURIComponent(c.tok)+'&oldest=2026-10-26');
+    data=await r.json();
+  }catch(e){syMsg('Sync failed: could not reach Apps Script. This works on the GitHub Pages version, not inside Claude.');return}
+  if(!data||data.error){syMsg('Sync failed: '+((data&&data.error)||'no data'));return}
+  state.synced=state.synced||{};
+  const byDay={};
+  (data.activities||[]).forEach(a=>{
+    if(state.synced[a.id])return;
+    const ds=String(a.date).slice(0,10).split('-').map(Number); if(ds.length<3)return;
+    const dt=new Date(ds[0],ds[1]-1,ds[2]); const diff=Math.round((dt-START)/864e5);
+    if(diff<0)return; const wi=Math.floor(diff/7), d=diff%7; if(wi>=W.length)return;
+    (byDay[wi+'-'+d]=byDay[wi+'-'+d]||[]).push(a);
+  });
+  let n=0;
+  Object.keys(byDay).forEach(key=>{
+    const [wi,d]=key.split('-').map(Number); const items=W[wi].days[d];
+    byDay[key].sort((a,b)=>b.moving_time-a.moving_time).forEach(a=>{
+      const free=slotsFor(a.type,items).filter(([x,i])=>{const k=id(wi,d,i);return !Object.values(state.synced).includes(k)&&!(state.logs[k]&&!state.logs[k].src)});
+      if(!free.length)return;
+      free.sort((p,q)=>((q[0].key||q[0].long||q[0].race?2:0)+(q[0].z==='vert'?1:0))-((p[0].key||p[0].long||p[0].race?2:0)+(p[0].z==='vert'?1:0)));
+      const k=id(wi,d,free[0][1]);
+      state.logs[k]=Object.assign({},state.logs[k]||{},{t:String(Math.round(a.moving_time/60)),km:a.distance?(a.distance/1000).toFixed(2):'',hr:a.avg_hr?String(Math.round(a.avg_hr)):'',src:'icu'});
+      state.checks[k]=true; state.synced[a.id]=k; n++;
+    });
+  });
+  const now=new Date(); c.last=now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+now.toTimeString().slice(0,5)+', '+n+' new'; setSyncCfg(c);
+  if(n){save();renderWeek()}
+  syMsg('Last sync: '+c.last+'.');
+}
+function autoSync(){if(syncCfg().url)runSync(false)}
 function renderAll(){renderHero();renderWeek();renderRaces();renderGym();renderYoga();renderCh();renderZones();renderCI()}
 
 /* ============ events ============ */
@@ -906,6 +1008,11 @@ document.addEventListener('click',e=>{
   if(b.id==='next'&&wsel<W.length-1){wsel++;openLog=null;renderHero();renderWeek();renderCI();return}
   if(b.id==='goNow'){wsel=curWeek();openLog=null;renderHero();renderWeek();renderCI();return}
   if(b.id==='reset'){if(!confirm('Clear every ticked session? Logs and test results stay.'))return;state.checks={};renderWeek();save();return}
+  if(b.id==='sySave'){const c=syncCfg();c.url=document.getElementById('syUrl').value.trim();c.tok=document.getElementById('syTok').value.trim();setSyncCfg(c);runSync(true);return}
+  if(b.id==='syNow'){runSync(true);return}
+  if(b.id==='exSum'){copyOut(seasonSummary(),'Summary');return}
+  if(b.id==='exRaw'){copyOut(JSON.stringify(state),'Backup');return}
+  if(b.id==='imBtn'){importData();return}
   if(b.id==='ciShow'||b.id==='ciCopy'){const o=document.getElementById('ciOut');o.value=weekSummary();o.classList.remove('hidden');
     if(b.id==='ciCopy'){(navigator.clipboard?navigator.clipboard.writeText(o.value):Promise.reject()).then(()=>toast('Copied')).catch(()=>{o.select();toast('Select all and copy')})}
     else{o.select()}return}
@@ -928,6 +1035,7 @@ merge(localGet());
 wsel=curWeek();
 renderAll();
 connect();
+autoSync();
 </script>
 </body>
 </html>
